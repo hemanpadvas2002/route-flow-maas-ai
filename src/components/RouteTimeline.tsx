@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Bus, Train, Taxi, Walking, Ferry, Bike } from 'lucide-react';
+import { Bus, Train, Car, UserRound, Ship, Bike } from 'lucide-react';
 
 interface RouteSegment {
   id: string;
@@ -46,11 +46,11 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
       case 'metro':
         return <Train className="h-5 w-5" />;
       case 'taxi':
-        return <Taxi className="h-5 w-5" />;
+        return <Car className="h-5 w-5" />;
       case 'walking':
-        return <Walking className="h-5 w-5" />;
+        return <UserRound className="h-5 w-5" />;
       case 'ferry':
-        return <Ferry className="h-5 w-5" />;
+        return <Ship className="h-5 w-5" />;
       case 'cycling':
         return <Bike className="h-5 w-5" />;
       default:

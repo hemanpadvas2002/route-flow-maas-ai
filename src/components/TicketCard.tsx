@@ -1,6 +1,6 @@
 
 import React, { useMemo } from 'react';
-import { Bus, Train, Taxi, Ferry, Bike } from 'lucide-react';
+import { Bus, Train, Car, Ship, Bike } from 'lucide-react';
 
 interface TicketCardProps {
   ticketId: string;
@@ -34,8 +34,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
       bus: { color: '#FFA500', icon: <Bus className="h-5 w-5" />, displayName: 'Bus' },
       train: { color: '#4CAF50', icon: <Train className="h-5 w-5" />, displayName: 'Train' },
       metro: { color: '#1E88E5', icon: <Train className="h-5 w-5" />, displayName: 'Metro' },
-      taxi: { color: '#FFEB3B', icon: <Taxi className="h-5 w-5" />, displayName: 'Taxi' },
-      ferry: { color: '#0D47A1', icon: <Ferry className="h-5 w-5" />, displayName: 'Ferry' },
+      taxi: { color: '#FFEB3B', icon: <Car className="h-5 w-5" />, displayName: 'Taxi' },
+      ferry: { color: '#0D47A1', icon: <Ship className="h-5 w-5" />, displayName: 'Ferry' },
       cycling: { color: '#8BC34A', icon: <Bike className="h-5 w-5" />, displayName: 'Bicycle' }
     };
     

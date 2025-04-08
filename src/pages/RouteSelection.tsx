@@ -29,7 +29,7 @@ const RouteSelection: React.FC = () => {
       segments: [
         {
           id: 'segment1',
-          mode: 'walking',
+          mode: 'walking' as const,
           startTime: '09:00',
           endTime: '09:10',
           startLocation: fromLocation || 'Home',
@@ -39,7 +39,7 @@ const RouteSelection: React.FC = () => {
         },
         {
           id: 'segment2',
-          mode: 'bus',
+          mode: 'bus' as const,
           startTime: '09:15',
           endTime: '09:45',
           startLocation: 'Bus Stop A',
@@ -51,7 +51,7 @@ const RouteSelection: React.FC = () => {
         },
         {
           id: 'segment3',
-          mode: 'walking',
+          mode: 'walking' as const,
           startTime: '09:45',
           endTime: '09:55',
           startLocation: 'Bus Stop B',
@@ -71,7 +71,7 @@ const RouteSelection: React.FC = () => {
       segments: [
         {
           id: 'segment1',
-          mode: 'walking',
+          mode: 'walking' as const,
           startTime: '09:00',
           endTime: '09:08',
           startLocation: fromLocation || 'Home',
@@ -81,7 +81,7 @@ const RouteSelection: React.FC = () => {
         },
         {
           id: 'segment2',
-          mode: 'metro',
+          mode: 'metro' as const,
           startTime: '09:15',
           endTime: '09:35',
           startLocation: 'Metro Station A',
@@ -93,7 +93,7 @@ const RouteSelection: React.FC = () => {
         },
         {
           id: 'segment3',
-          mode: 'walking',
+          mode: 'walking' as const,
           startTime: '09:35',
           endTime: '09:50',
           startLocation: 'Metro Station B',

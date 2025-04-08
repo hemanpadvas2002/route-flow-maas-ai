@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Bus, Train, Taxi, Walking, Ferry, Bike } from 'lucide-react';
+import { Bus, Train, Car, UserRound, Ship, Bike } from 'lucide-react';
 
 interface TransportMode {
   id: string;
@@ -40,19 +40,19 @@ const TransportModeSelector: React.FC<TransportModeSelectorProps> = ({
     {
       id: 'taxi',
       name: 'Taxi',
-      icon: <Taxi className="h-5 w-5" />,
+      icon: <Car className="h-5 w-5" />,
       color: '#FFEB3B', // Yellow
     },
     {
       id: 'walking',
       name: 'Walking',
-      icon: <Walking className="h-5 w-5" />,
+      icon: <UserRound className="h-5 w-5" />,
       color: '#BDBDBD', // Light Grey
     },
     {
       id: 'ferry',
       name: 'Ferry',
-      icon: <Ferry className="h-5 w-5" />,
+      icon: <Ship className="h-5 w-5" />,
       color: '#0D47A1', // Navy Blue
     },
     {

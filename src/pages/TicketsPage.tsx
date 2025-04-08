@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bus, Train, Taxi, Walking, Ferry, Bike } from 'lucide-react';
+import { Bus, Train, Car, UserRound, Ship, Bike, Ticket as TicketIcon } from 'lucide-react';
 import TicketCard from '../components/TicketCard';
 import NavigationBar from '../components/NavigationBar';
 
@@ -163,7 +162,7 @@ const TicketsPage: React.FC = () => {
         ) : (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="bg-gray-200 rounded-full p-4 mb-4">
-              <Ticket className="h-10 w-10 text-gray-500" />
+              <TicketIcon className="h-10 w-10 text-gray-500" />
             </div>
             <h3 className="text-lg font-semibold text-gray-700">No tickets found</h3>
             <p className="text-gray-500 mb-6">You don't have any {activeTab} tickets</p>
