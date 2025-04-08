@@ -64,20 +64,32 @@ const TransportModeSelector: React.FC<TransportModeSelectorProps> = ({
   ];
 
   return (
-    <div className="transport-mode-selector overflow-x-auto py-2">
-      <div className="flex space-x-2 pb-1 px-2 min-w-max">
+    <div className="transport-mode-selector overflow-x-auto py-2 -mx-4 px-4">
+      <div className="flex space-x-3 min-w-max">
         {transportModes.map((mode) => (
           <button
             key={mode.id}
             className={`
-              transport-pill flex-shrink-0 transition-all
+              flex flex-col items-center justify-center p-2 rounded-lg transition-all
               ${selectedMode === mode.id ? 'scale-105 shadow-md' : 'opacity-80'}
             `}
-            style={{ backgroundColor: mode.color }}
+            style={{ 
+              backgroundColor: selectedMode === mode.id ? mode.color : `${mode.color}40`,
+              width: 70 
+            }}
             onClick={() => onSelectMode(mode.id)}
           >
-            {mode.icon}
-            <span>{mode.name}</span>
+            <div 
+              className="rounded-full p-2 mb-1" 
+              style={{ backgroundColor: selectedMode === mode.id ? 'white' : `${mode.color}80` }}
+            >
+              <div className={`${selectedMode === mode.id ? 'text-black' : 'text-white'}`}>
+                {mode.icon}
+              </div>
+            </div>
+            <span className={`text-xs font-medium ${selectedMode === mode.id ? 'text-white' : 'text-gray-700'}`}>
+              {mode.name}
+            </span>
           </button>
         ))}
       </div>

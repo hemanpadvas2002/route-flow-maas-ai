@@ -26,22 +26,33 @@ const NavigationBar: React.FC = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200">
+    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-800 rounded-t-xl z-50">
       <div className="flex justify-around items-center h-16">
-        {navItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`flex flex-col items-center justify-center w-full h-full px-2 ${
-              currentPath === item.path
-                ? 'text-blue-600'
-                : 'text-gray-500'
-            }`}
-          >
-            {item.icon}
-            <span className="text-xs mt-1">{item.label}</span>
-          </Link>
-        ))}
+        {navItems.map((item) => {
+          const isActive = currentPath === item.path;
+          
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className="flex flex-col items-center justify-center w-full h-full px-2"
+            >
+              <div className={`relative ${
+                isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'
+              }`}>
+                {item.icon}
+                {isActive && (
+                  <span className="absolute -bottom-1 left-1/2 w-1.5 h-1.5 bg-blue-600 dark:bg-blue-400 rounded-full transform -translate-x-1/2"></span>
+                )}
+              </div>
+              <span className={`text-xs mt-1 ${
+                isActive ? 'text-blue-600 dark:text-blue-400 font-medium' : 'text-gray-500 dark:text-gray-400'
+              }`}>
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
