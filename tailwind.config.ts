@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// MaaS Transport Mode Colors
+				transport: {
+					bus: '#FFA500',  // Orange
+					train: '#4CAF50',  // Green
+					metro: '#1E88E5',  // Blue
+					taxi: '#FFEB3B',  // Yellow
+					walking: '#BDBDBD',  // Light Grey
+					ferry: '#0D47A1',  // Navy Blue
+					cycling: '#8BC34A',  // Lime Green
 				}
 			},
 			borderRadius: {
@@ -84,11 +95,41 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'slide-up': {
+					from: {
+						transform: 'translateY(100%)'
+					},
+					to: {
+						transform: 'translateY(0)'
+					}
+				},
+				'pulse-light': {
+					'0%, 100%': {
+						opacity: '1'
+					},
+					'50%': {
+						opacity: '0.7'
+					}
+				},
+				'rotate-nfc': {
+					'0%': {
+						transform: 'rotate(0deg) scale(1)'
+					},
+					'50%': {
+						transform: 'rotate(15deg) scale(1.1)'
+					},
+					'100%': {
+						transform: 'rotate(0deg) scale(1)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'slide-up': 'slide-up 0.3s ease-out',
+				'pulse-light': 'pulse-light 2s ease-in-out infinite',
+				'rotate-nfc': 'rotate-nfc 2s ease-in-out infinite'
 			}
 		}
 	},

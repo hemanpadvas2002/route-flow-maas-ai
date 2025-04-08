@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,19 +36,12 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -97,5 +91,37 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .transport-pill {
+    @apply px-4 py-2 rounded-full flex items-center gap-2 text-white font-medium;
+  }
+  
+  .ticket-card {
+    @apply relative overflow-hidden rounded-lg shadow-lg;
+  }
+  
+  .ticket-card::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-full opacity-10 bg-gradient-to-br from-white to-transparent;
+  }
+  
+  .boarding-pass {
+    @apply relative bg-white rounded-xl shadow-xl overflow-hidden;
+  }
+  
+  .boarding-pass::after {
+    content: '';
+    @apply absolute w-full h-4 left-0 border-b border-dashed border-gray-300;
+  }
+  
+  .map-search-container {
+    @apply relative z-10 w-full;
+  }
+  
+  .route-timeline-container {
+    @apply rounded-t-3xl bg-white shadow-lg relative z-20 -mt-6;
   }
 }
