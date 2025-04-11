@@ -6,6 +6,8 @@ import Map from '../components/Map';
 import TransportModeSelector from '../components/TransportModeSelector';
 import RouteTimeline from '../components/RouteTimeline';
 import NavigationBar from '../components/NavigationBar';
+import StatusBar from '../components/StatusBar';
+import { Button } from '../components/ui/button';
 
 interface LocationState {
   fromLocation: string;
@@ -108,6 +110,37 @@ const RouteSelection: React.FC = () => {
       departureTime: '09:00',
       arrivalTime: '09:50',
     },
+    {
+      id: 'route3',
+      segments: [
+        {
+          id: 'segment1',
+          mode: 'walking' as const,
+          startTime: '09:05',
+          endTime: '09:15',
+          startLocation: fromLocation || 'Home',
+          endLocation: 'Taxi Pickup Point',
+          duration: 10,
+          distance: 0.8,
+        },
+        {
+          id: 'segment2',
+          mode: 'taxi' as const,
+          startTime: '09:15',
+          endTime: '09:40',
+          startLocation: 'Taxi Pickup Point',
+          endLocation: toLocation || 'Office',
+          duration: 25,
+          distance: 8.5,
+          price: 150,
+        },
+      ],
+      totalDuration: 35,
+      totalDistance: 9.3,
+      totalPrice: 150,
+      departureTime: '09:05',
+      arrivalTime: '09:40',
+    },
   ];
 
   useEffect(() => {
@@ -126,6 +159,8 @@ const RouteSelection: React.FC = () => {
 
   const handleSelectRoute = (routeId: string) => {
     setSelectedRouteId(routeId);
+    setExpandedView(true);
+    setMapCollapsed(true);
   };
 
   const handleBookTicket = () => {
@@ -139,8 +174,13 @@ const RouteSelection: React.FC = () => {
     }
   };
 
+  // Find the selected route to display on map
+  const selectedRoute = routes.find(route => route.id === selectedRouteId);
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col pb-16">
+      <StatusBar style="light" />
+      
       {/* Top section with map */}
       <div className={`relative transition-all duration-300 ease-in-out ${mapCollapsed ? 'h-32' : 'h-[40vh]'}`}>
         <Map 
@@ -161,8 +201,8 @@ const RouteSelection: React.FC = () => {
             <div>
               <h2 className="font-bold text-lg">{fromLocation} to {toLocation}</h2>
               <p className="text-sm text-gray-500">
-                {routes.find(r => r.id === selectedRouteId)?.totalDuration || 0} min · 
-                {routes.find(r => r.id === selectedRouteId)?.totalDistance.toFixed(1) || 0} km
+                {selectedRoute?.totalDuration || 0} min · 
+                {selectedRoute?.totalDistance.toFixed(1) || 0} km
               </p>
             </div>
             <button 
@@ -179,7 +219,10 @@ const RouteSelection: React.FC = () => {
       <div className="bg-white border-b border-gray-200 shadow-sm">
         <TransportModeSelector 
           selectedMode={selectedMode}
-          onSelectMode={setSelectedMode}
+          onSelectMode={(mode) => {
+            setSelectedMode(mode);
+            // In a real app, this would filter routes by transport mode
+          }}
         />
       </div>
       
@@ -195,12 +238,12 @@ const RouteSelection: React.FC = () => {
       
       {/* Bottom action button */}
       <div className="fixed bottom-16 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg">
-        <button
-          className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium"
+        <Button
+          className="w-full py-6 rounded-lg bg-blue-600 text-white font-medium text-lg"
           onClick={handleBookTicket}
         >
           Book Ticket
-        </button>
+        </Button>
       </div>
       
       <NavigationBar />

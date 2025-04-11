@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Bus, Train, Car, UserRound, Ship, Bike } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface RouteSegment {
   id: string;
@@ -41,20 +42,20 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
   const getIconForMode = (mode: string) => {
     switch (mode) {
       case 'bus':
-        return <Bus className="h-5 w-5" />;
+        return <Bus className="h-5 w-5 text-white" />;
       case 'train':
       case 'metro':
-        return <Train className="h-5 w-5" />;
+        return <Train className="h-5 w-5 text-white" />;
       case 'taxi':
-        return <Car className="h-5 w-5" />;
+        return <Car className="h-5 w-5 text-white" />;
       case 'walking':
-        return <UserRound className="h-5 w-5" />;
+        return <UserRound className="h-5 w-5 text-white" />;
       case 'ferry':
-        return <Ship className="h-5 w-5" />;
+        return <Ship className="h-5 w-5 text-white" />;
       case 'cycling':
-        return <Bike className="h-5 w-5" />;
+        return <Bike className="h-5 w-5 text-white" />;
       default:
-        return <Bus className="h-5 w-5" />;
+        return <Bus className="h-5 w-5 text-white" />;
     }
   };
 
@@ -76,6 +77,27 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
         return '#8BC34A'; // Lime Green
       default:
         return '#BDBDBD';
+    }
+  };
+
+  const getModeLabel = (mode: string) => {
+    switch (mode) {
+      case 'bus':
+        return 'Bus';
+      case 'train':
+        return 'Train';
+      case 'metro':
+        return 'Metro';
+      case 'taxi':
+        return 'Taxi';
+      case 'walking':
+        return 'Walking';
+      case 'ferry':
+        return 'Ferry';
+      case 'cycling':
+        return 'Cycling';
+      default:
+        return mode.charAt(0).toUpperCase() + mode.slice(1);
     }
   };
 
@@ -125,8 +147,11 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
               ))}
             </div>
 
-            {(isSelected && expanded) && (
-              <div className="mt-4 space-y-4 pt-3 border-t border-gray-100">
+            <Collapsible 
+              open={isSelected && expanded} 
+              className={`mt-4 ${isSelected ? 'block' : 'hidden'}`}
+            >
+              <CollapsibleContent className="space-y-4 pt-3 border-t border-gray-100">
                 {route.segments.map((segment) => (
                   <div key={segment.id} className="segment-details">
                     <div className="flex items-center mb-2">
@@ -138,11 +163,12 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
                       </div>
                       <div>
                         <div className="font-medium">
-                          {segment.mode.charAt(0).toUpperCase() + segment.mode.slice(1)}
+                          {getModeLabel(segment.mode)}
                           {segment.routeIdentifier && ` (${segment.routeIdentifier})`}
                         </div>
                         <div className="text-sm text-gray-500">
                           {segment.duration} min · {segment.distance} km
+                          {segment.price && ` · ₹${segment.price.toFixed(2)}`}
                         </div>
                       </div>
                     </div>
@@ -158,8 +184,8 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
                     </div>
                   </div>
                 ))}
-              </div>
-            )}
+              </CollapsibleContent>
+            </Collapsible>
           </div>
         );
       })}
