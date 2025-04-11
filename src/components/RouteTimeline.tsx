@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Bus, Train, Car, UserRound, Ship, Bike } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useNavigate } from 'react-router-dom';
 
 interface RouteSegment {
   id: string;
@@ -39,6 +39,8 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
   onSelectRoute,
   expanded = false,
 }) => {
+  const navigate = useNavigate();
+
   const getIconForMode = (mode: string) => {
     switch (mode) {
       case 'bus':
@@ -101,6 +103,21 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
     }
   };
 
+  const handleRouteClick = (route: RouteOption, event: React.MouseEvent) => {
+    onSelectRoute(route.id);
+    
+    // If it's already selected and expanded, navigate to details page
+    if (route.id === selectedRouteId && expanded) {
+      navigate(`/route-details/${route.id}`, { 
+        state: { 
+          route, 
+          fromLocation: route.segments[0].startLocation,
+          toLocation: route.segments[route.segments.length - 1].endLocation 
+        } 
+      });
+    }
+  };
+
   return (
     <div className="route-timeline py-4">
       {routes.map((route) => {
@@ -115,7 +132,7 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
               ${isSelected ? 'border-blue-500 shadow-md scale-[1.02]' : 'border-gray-200'}
               ${isSelected && expanded ? 'bg-blue-50' : 'bg-white'}
             `}
-            onClick={() => onSelectRoute(route.id)}
+            onClick={(e) => handleRouteClick(route, e)}
           >
             <div className="flex justify-between items-center mb-3">
               <div className="flex items-center space-x-3">
