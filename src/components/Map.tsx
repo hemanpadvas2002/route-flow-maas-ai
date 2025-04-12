@@ -38,12 +38,12 @@ const Map: React.FC<MapProps> = ({
 
     if (map.current) return;
 
-    // Initialize map
+    // Initialize map with dark style
     mapboxgl.accessToken = token;
     
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
+      style: 'mapbox://styles/mapbox/dark-v11', // Using dark style to match the new theme
       center: startLocation || [78.9629, 20.5937], // Default to center of India
       zoom: 12,
       pitch: 40, // Add some pitch for a nicer 3D effect
@@ -127,6 +127,7 @@ const Map: React.FC<MapProps> = ({
           paint: {
             'line-color': '#1E88E5',
             'line-width': 5,
+            'line-opacity': 0.8,
           },
         });
       }
@@ -149,15 +150,15 @@ const Map: React.FC<MapProps> = ({
   return (
     <div className={`relative ${className} ${collapsed ? 'h-32' : 'h-full min-h-[calc(100vh-116px)]'}`}>
       {!mapboxToken && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-gray-100 p-4 rounded-lg">
-          <p className="mb-4 text-center text-sm">Please enter your Mapbox token:</p>
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#1E1E2F] p-4 rounded-lg">
+          <p className="mb-4 text-center text-sm text-white">Please enter your Mapbox token:</p>
           <input
             type="text"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded bg-[#2C2C3A] text-white border-[#3E3E55]"
             placeholder="Enter Mapbox token"
             onChange={handleTokenInput}
           />
-          <p className="mt-2 text-xs text-gray-500">Get one at mapbox.com</p>
+          <p className="mt-2 text-xs text-gray-400">Get one at mapbox.com</p>
         </div>
       )}
       <div ref={mapContainer} className="absolute inset-0" />
