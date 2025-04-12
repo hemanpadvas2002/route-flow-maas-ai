@@ -79,15 +79,15 @@ const TicketCard: React.FC<TicketCardProps> = ({
       </div>
       
       {/* Ticket details */}
-      <div className="p-5 bg-[#2C2C3A] text-white">
+      <div className="p-5 bg-white">
         <div className="grid grid-cols-2 gap-6 mb-6">
           <div>
-            <div className="text-xs text-gray-300">From</div>
+            <div className="text-xs text-gray-500">From</div>
             <div className="font-bold text-lg truncate">{startLocation}</div>
             <div className="text-sm">{departureTime}</div>
           </div>
           <div>
-            <div className="text-xs text-gray-300">To</div>
+            <div className="text-xs text-gray-500">To</div>
             <div className="font-bold text-lg truncate">{endLocation}</div>
             <div className="text-sm">{arrivalTime}</div>
           </div>
@@ -95,18 +95,18 @@ const TicketCard: React.FC<TicketCardProps> = ({
         
         <div className="flex justify-between items-center mb-6">
           <div>
-            <div className="text-xs text-gray-300">Date</div>
+            <div className="text-xs text-gray-500">Date</div>
             <div className="font-medium">{date}</div>
           </div>
           <div>
-            <div className="text-xs text-gray-300">Passenger</div>
+            <div className="text-xs text-gray-500">Passenger</div>
             <div className="font-medium">{passengerName}</div>
           </div>
         </div>
       </div>
       
       {/* Barcode & ticket ID section */}
-      <div className="p-5 bg-[#3E3E55] border-t border-dashed border-gray-600 flex flex-col items-center">
+      <div className="p-5 bg-gray-50 border-t border-dashed border-gray-300 flex flex-col items-center">
         <div className="mb-2 w-full">
           <div className="flex space-x-[2px] justify-center">
             {barcodePattern.map((width, i) => (
@@ -118,14 +118,14 @@ const TicketCard: React.FC<TicketCardProps> = ({
             ))}
           </div>
         </div>
-        <div className="text-center text-xs font-mono text-gray-300">
+        <div className="text-center text-xs font-mono text-gray-600">
           {ticketId}
         </div>
       </div>
       
       {expired && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="bg-[#2C2C3A]/80 px-6 py-2 rounded-full border-2 border-red-500 text-red-400 font-bold text-xl transform rotate-[-20deg]">
+          <div className="bg-white/80 px-6 py-2 rounded-full border-2 border-red-500 text-red-500 font-bold text-xl transform rotate-[-20deg]">
             EXPIRED
           </div>
         </div>

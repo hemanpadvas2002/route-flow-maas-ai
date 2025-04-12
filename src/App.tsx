@@ -28,12 +28,12 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
       document.head.appendChild(meta);
     }
     
-    // Add status bar color for Android to match our theme
+    // Add status bar color for Android
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (!themeColor) {
       const meta = document.createElement('meta');
       meta.name = 'theme-color';
-      meta.content = '#1E1E2F';
+      meta.content = '#ffffff';
       document.head.appendChild(meta);
     }
     
@@ -63,8 +63,6 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
         max-width: 100%;
         overflow-x: hidden;
         position: relative;
-        background: linear-gradient(to bottom, #1E1E2F, #2C2C3A, #3E3E55);
-        min-height: 100vh;
       }
     `;
     document.head.appendChild(style);

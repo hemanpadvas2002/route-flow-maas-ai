@@ -31,11 +31,11 @@ const TicketView: React.FC = () => {
 
   if (!ticket) {
     return (
-      <div className="min-h-screen bg-[#1E1E2F] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-lg text-white">No ticket found</p>
+          <p className="text-lg text-gray-700">No ticket found</p>
           <button
-            className="mt-4 px-4 py-2 bg-[#3E3E55] text-white rounded-lg"
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
             onClick={() => navigate('/')}
           >
             Go Home
@@ -50,9 +50,9 @@ const TicketView: React.FC = () => {
   const transportMode = mainSegment?.mode || 'bus';
 
   return (
-    <div className="min-h-screen bg-[#1E1E2F] pb-16">
+    <div className="min-h-screen bg-gray-100 pb-16">
       {/* Header */}
-      <div className="bg-[#2C2C3A] text-white p-4">
+      <div className="bg-blue-600 text-white p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <button className="mr-2" onClick={handleBack}>
@@ -84,21 +84,21 @@ const TicketView: React.FC = () => {
       
       {/* Share options */}
       {showShareOptions && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onClick={toggleShareOptions}>
-          <div className="bg-[#2C2C3A] rounded-xl p-5 m-4 w-full max-w-md" onClick={e => e.stopPropagation()}>
-            <h3 className="text-lg font-semibold mb-4 text-white">Share Ticket</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={toggleShareOptions}>
+          <div className="bg-white rounded-xl p-5 m-4 w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold mb-4">Share Ticket</h3>
             <div className="grid grid-cols-3 gap-4">
               {['Email', 'SMS', 'WhatsApp', 'Telegram', 'Copy Link', 'More'].map((option) => (
                 <div key={option} className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-[#3E3E55] flex items-center justify-center mb-1">
-                    <span className="text-white">{option.charAt(0)}</span>
+                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-1">
+                    <span className="text-blue-600">{option.charAt(0)}</span>
                   </div>
-                  <span className="text-sm text-gray-300">{option}</span>
+                  <span className="text-sm">{option}</span>
                 </div>
               ))}
             </div>
             <button
-              className="w-full mt-5 py-2 border border-gray-500 rounded-lg text-white"
+              className="w-full mt-5 py-2 border border-gray-300 rounded-lg text-gray-700"
               onClick={toggleShareOptions}
             >
               Cancel
@@ -108,15 +108,15 @@ const TicketView: React.FC = () => {
       )}
       
       {/* Action buttons */}
-      <div className="fixed bottom-16 left-0 right-0 p-4 bg-[#2C2C3A] border-t border-[#3E3E55] shadow-md">
+      <div className="fixed bottom-16 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-md">
         <button
-          className="w-full py-3 mb-3 rounded-lg border border-[#4CAF50] text-[#4CAF50] font-medium flex items-center justify-center"
+          className="w-full py-3 mb-3 rounded-lg border border-blue-600 text-blue-600 font-medium flex items-center justify-center"
         >
           <Download className="h-5 w-5 mr-2" />
           Download Ticket
         </button>
         <button
-          className="w-full py-3 rounded-lg bg-[#4CAF50] text-white font-medium"
+          className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium"
           onClick={() => navigate('/')}
         >
           Book Another Trip
