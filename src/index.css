@@ -90,7 +90,12 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#1E1E2F] text-white;
+  }
+  
+  /* Force app to use dark theme */
+  html {
+    color-scheme: dark;
   }
 }
 
@@ -109,12 +114,12 @@
   }
   
   .boarding-pass {
-    @apply relative bg-white rounded-xl shadow-xl overflow-hidden;
+    @apply relative bg-[#2C2C3A] rounded-xl shadow-xl overflow-hidden;
   }
   
   .boarding-pass::after {
     content: '';
-    @apply absolute w-full h-4 left-0 border-b border-dashed border-gray-300;
+    @apply absolute w-full h-4 left-0 border-b border-dashed border-gray-600;
   }
   
   .map-search-container {
@@ -122,6 +127,38 @@
   }
   
   .route-timeline-container {
-    @apply rounded-t-3xl bg-white shadow-lg relative z-20 -mt-6;
+    @apply rounded-t-3xl bg-[#1E1E2F] shadow-lg relative z-20 -mt-6;
+  }
+  
+  /* Override default styles for inputs, buttons, etc. */
+  input, select, textarea {
+    @apply bg-[#2C2C3A] border-[#3E3E55] text-white;
+  }
+  
+  /* Override shadcn components with our color scheme */
+  .bg-white {
+    @apply bg-[#2C2C3A] !important;
+  }
+  
+  .bg-gray-50, .bg-gray-100, .bg-gray-200 {
+    @apply bg-[#2C2C3A] !important;
+  }
+  
+  .text-gray-500, .text-gray-600, .text-gray-700 {
+    @apply text-gray-300 !important;
+  }
+  
+  .border-gray-200, .border-gray-300 {
+    @apply border-[#3E3E55] !important;
+  }
+  
+  /* Override for popover and dropdown components */
+  [data-radix-popper-content-wrapper] {
+    @apply bg-[#2C2C3A] text-white border-[#3E3E55] !important;
+  }
+  
+  /* Override for any remaining white backgrounds */
+  .dark-gradient {
+    @apply bg-gradient-to-b from-[#1E1E2F] via-[#2C2C3A] to-[#3E3E55];
   }
 }
