@@ -44,26 +44,12 @@ const Map: React.FC<MapProps> = ({
       style: 'mapbox://styles/mapbox/streets-v12',
       center: startLocation || [78.9629, 20.5937], // Default to center of India
       zoom: 12,
-      pitch: 40, // Add some pitch for a nicer 3D effect
-      bearing: 20, // Slight rotation for better perspective
     });
 
     // Add navigation controls
     map.current.addControl(
       new mapboxgl.NavigationControl({
         showCompass: false,
-      }),
-      'top-right'
-    );
-
-    // Add geolocation control
-    map.current.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true
-        },
-        trackUserLocation: true,
-        showUserHeading: true
       }),
       'top-right'
     );
@@ -141,7 +127,7 @@ const Map: React.FC<MapProps> = ({
   };
 
   return (
-    <div className={`relative ${className} ${collapsed ? 'h-32' : 'h-full min-h-[calc(100vh-116px)]'}`}>
+    <div className={`relative ${className} ${collapsed ? 'h-32' : 'h-[60vh]'}`}>
       {!mapboxToken && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-gray-100 p-4 rounded-lg">
           <p className="mb-4 text-center text-sm">Please enter your Mapbox token:</p>
@@ -154,7 +140,7 @@ const Map: React.FC<MapProps> = ({
           <p className="mt-2 text-xs text-gray-500">Get one at mapbox.com</p>
         </div>
       )}
-      <div ref={mapContainer} className="absolute inset-0" />
+      <div ref={mapContainer} className="absolute inset-0 rounded-lg" />
     </div>
   );
 };
