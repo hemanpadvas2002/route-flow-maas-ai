@@ -11,7 +11,6 @@ import TicketBooking from "./pages/TicketBooking";
 import TicketView from "./pages/TicketView";
 import TicketsPage from "./pages/TicketsPage";
 import ProfilePage from "./pages/ProfilePage";
-import ArgoMap from "./pages/ArgoMap";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -86,8 +85,7 @@ const App = () => (
         <BrowserRouter>
           <AppContainer>
             <Routes>
-              <Route path="/" element={<ArgoMap />} />
-              <Route path="/old-home" element={<Home />} />
+              <Route path="/" element={<Home />} />
               <Route path="/route-selection" element={<RouteSelection />} />
               <Route path="/route-details/:routeId" element={<RouteDetails />} />
               <Route path="/ticket-booking" element={<TicketBooking />} />
