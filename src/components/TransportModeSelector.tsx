@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Bus, Train, Car, UserRound, Ship, Bike } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface TransportMode {
   id: string;
@@ -18,6 +19,8 @@ const TransportModeSelector: React.FC<TransportModeSelectorProps> = ({
   selectedMode,
   onSelectMode,
 }) => {
+  const { theme } = useTheme();
+  
   const transportModes: TransportMode[] = [
     {
       id: 'bus',
@@ -64,7 +67,14 @@ const TransportModeSelector: React.FC<TransportModeSelectorProps> = ({
   ];
 
   return (
-    <div className="transport-mode-selector overflow-x-auto py-4 px-2" style={{ background: 'linear-gradient(to right, #1E1E2F, #2C2C3A)' }}>
+    <div 
+      className="transport-mode-selector overflow-x-auto py-4 px-2" 
+      style={{ 
+        background: theme === 'dark' 
+          ? 'linear-gradient(to right, #1E1E2F, #2C2C3A)' 
+          : 'linear-gradient(to right, #f5f5f5, #e0e0e0)' 
+      }}
+    >
       <div className="flex space-x-3 min-w-max px-2">
         {transportModes.map((mode) => (
           <button
@@ -84,11 +94,19 @@ const TransportModeSelector: React.FC<TransportModeSelectorProps> = ({
               className="rounded-full p-2 mb-1" 
               style={{ backgroundColor: selectedMode === mode.id ? 'white' : `${mode.color}40` }}
             >
-              <div className={`${selectedMode === mode.id ? `text-[${mode.color}]` : 'text-white'}`}>
+              <div 
+                style={{ color: selectedMode === mode.id ? mode.color : theme === 'dark' ? 'white' : '#333' }}
+              >
                 {mode.icon}
               </div>
             </div>
-            <span className={`text-xs font-medium ${selectedMode === mode.id ? 'text-white' : 'text-gray-300'}`}>
+            <span 
+              className={`text-xs font-medium ${
+                selectedMode === mode.id 
+                  ? 'text-white' 
+                  : theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+              }`}
+            >
               {mode.name}
             </span>
           </button>

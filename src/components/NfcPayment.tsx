@@ -33,34 +33,38 @@ const NfcPayment: React.FC<NfcPaymentProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 rounded-xl" style={{ background: 'linear-gradient(to bottom, #222831, #393E46)' }}>
+    <div className="flex flex-col items-center justify-center h-full p-6 rounded-xl" 
+      style={{ background: 'linear-gradient(to bottom, #222831, #393E46)' }}>
       <div className="mb-6 text-xl font-semibold text-white">
         Pay ₹{amount.toFixed(2)}
       </div>
       
-      <div 
-        className={`
-          relative p-8 rounded-full mb-8 cursor-pointer
-          ${paymentStatus === 'processing' ? 'nfc-pulse' : ''}
-          ${paymentStatus === 'processing' ? 'ai-glow' : 'bg-[#2C5364]'}
-        `}
-        onClick={startPaymentSimulation}
-      >
-        <Nfc 
+      {/* Centered NFC animation */}
+      <div className="flex flex-col items-center justify-center flex-grow w-full">
+        <div 
           className={`
-            h-20 w-20 text-white
-            ${paymentStatus === 'processing' ? 'animate-rotate-nfc' : ''}
+            relative p-10 rounded-full mb-8 cursor-pointer
+            ${paymentStatus === 'processing' ? 'nfc-pulse' : ''}
+            ${paymentStatus === 'processing' ? 'ai-glow' : 'bg-[#2C5364]'}
           `}
-        />
-        {paymentStatus === 'success' && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[#00ADB5] rounded-full ai-glow">
-            <Check className="h-14 w-14 text-white" />
-          </div>
-        )}
+          onClick={startPaymentSimulation}
+        >
+          <Nfc 
+            className={`
+              h-24 w-24 text-white
+              ${paymentStatus === 'processing' ? 'animate-rotate-nfc' : ''}
+            `}
+          />
+          {paymentStatus === 'success' && (
+            <div className="absolute inset-0 flex items-center justify-center bg-[#00ADB5] rounded-full ai-glow">
+              <Check className="h-16 w-16 text-white" />
+            </div>
+          )}
+        </div>
       </div>
       
       {paymentStatus === 'processing' && (
-        <div className="w-full h-1 bg-[#393E46] rounded-full mb-8 overflow-hidden">
+        <div className="w-full h-2 bg-[#393E46] rounded-full mb-8 overflow-hidden">
           <div className="h-full bg-[#00ADB5] animate-pulse" style={{
             width: '60%',
             animation: 'progress 2s ease-in-out infinite'
@@ -68,7 +72,7 @@ const NfcPayment: React.FC<NfcPaymentProps> = ({
         </div>
       )}
       
-      <div className="text-center">
+      <div className="text-center mb-6">
         <p className={`text-lg ${paymentStatus === 'success' ? 'text-[#00ADB5] font-medium' : 'text-white'}`}>
           {statusMessage}
         </p>
@@ -78,12 +82,12 @@ const NfcPayment: React.FC<NfcPaymentProps> = ({
       </div>
       
       {paymentStatus === 'idle' && (
-        <div className="mt-8 w-full">
+        <div className="w-full">
           <button
             className="w-full py-4 rounded-lg text-white font-medium maas-button-glow"
             onClick={startPaymentSimulation}
           >
-            Simulate NFC Payment
+            Tap to Pay
           </button>
         </div>
       )}

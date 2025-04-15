@@ -13,6 +13,7 @@ import TicketsPage from "./pages/TicketsPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient();
 
@@ -55,9 +56,6 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
         -webkit-tap-highlight-color: transparent;
         overscroll-behavior: none;
         touch-action: manipulation;
-        background: linear-gradient(to bottom, #1E1E2F, #2C2C3A, #3E3E55);
-        min-height: 100vh;
-        color: #ffffff;
       }
       
       .app-container {
@@ -69,9 +67,6 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
       }
     `;
     document.head.appendChild(style);
-    
-    // Force dark mode
-    document.documentElement.classList.add('dark');
   }, []);
 
   return (
@@ -83,24 +78,26 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AppContainer>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/route-selection" element={<RouteSelection />} />
-            <Route path="/route-details/:routeId" element={<RouteDetails />} />
-            <Route path="/ticket-booking" element={<TicketBooking />} />
-            <Route path="/ticket-view" element={<TicketView />} />
-            <Route path="/tickets" element={<TicketsPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AppContainer>
-      </BrowserRouter>
-    </TooltipProvider>
+    <ThemeProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AppContainer>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/route-selection" element={<RouteSelection />} />
+              <Route path="/route-details/:routeId" element={<RouteDetails />} />
+              <Route path="/ticket-booking" element={<TicketBooking />} />
+              <Route path="/ticket-view" element={<TicketView />} />
+              <Route path="/tickets" element={<TicketsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AppContainer>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

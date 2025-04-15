@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -22,14 +21,15 @@ const Map: React.FC<MapProps> = ({
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const [mapboxToken, setMapboxToken] = useState<string>('');
+  const [mapboxToken, setMapboxToken] = useState<string>(
+    'pk.eyJ1IjoiaGVtYW4tMDciLCJhIjoiY205aTVxbGdxMGE4ZzJqcXY5d2R0a2M3aCJ9.YCbFWOjZehRjsyQ7DyU49w'
+  );
 
   useEffect(() => {
     if (!mapContainer.current || hidden) return;
     
-    // In a real app, this would be securely stored in environment variables
-    // Using a temporary state variable for demo purposes only
-    const token = mapboxToken || 'pk.placeholder';
+    // Use the permanently integrated token
+    const token = mapboxToken;
     
     if (token === 'pk.placeholder') {
       console.error('Please set a valid Mapbox token');
@@ -62,6 +62,7 @@ const Map: React.FC<MapProps> = ({
           type: 'geojson',
           data: {
             type: 'Feature',
+            properties: {}, // Add the missing properties field
             geometry: {
               type: 'Polygon',
               coordinates: [
@@ -199,18 +200,6 @@ const Map: React.FC<MapProps> = ({
 
   return (
     <div className={`relative ${className} ${collapsed ? 'h-32' : 'h-full min-h-[calc(100vh-116px)]'}`}>
-      {!mapboxToken && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#1E1E2F] p-4 rounded-lg">
-          <p className="mb-4 text-center text-sm text-white">Please enter your Mapbox token:</p>
-          <input
-            type="text"
-            className="w-full p-2 border rounded bg-[#2C2C3A] text-white border-[#3E3E55]"
-            placeholder="Enter Mapbox token"
-            onChange={handleTokenInput}
-          />
-          <p className="mt-2 text-xs text-gray-400">Get one at mapbox.com</p>
-        </div>
-      )}
       <div ref={mapContainer} className="absolute inset-0" />
     </div>
   );
