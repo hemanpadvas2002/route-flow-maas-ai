@@ -84,6 +84,7 @@ const Map: React.FC<MapProps> = ({
     map.current.on('style.load', () => {
       if (!map.current) return;
       console.log('Map style loaded, adding custom layers');
+      setMapLoaded(true);
       
       // Add a custom layer on top of the map with a slight gradient overlay
       map.current.addLayer({
@@ -113,9 +114,6 @@ const Map: React.FC<MapProps> = ({
           'fill-opacity': 0.15
         }
       });
-
-      // After map style is loaded, set map as loaded
-      setMapLoaded(true);
       
       // Setup click handler on the map
       map.current.on('click', (e) => {
@@ -718,8 +716,9 @@ const Map: React.FC<MapProps> = ({
         </div>
       )}
       
-      {/* Add custom CSS for markers and animations */}
-      <style jsx global>{`
+      {/* CSS styling for markers and animations */}
+      <style>
+        {`
         .vehicle-marker {
           width: 30px;
           height: 30px;
@@ -857,7 +856,8 @@ const Map: React.FC<MapProps> = ({
             box-shadow: 0 0 0 0 rgba(0, 173, 181, 0);
           }
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };
