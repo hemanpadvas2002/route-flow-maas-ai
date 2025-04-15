@@ -22,7 +22,6 @@ const Map: React.FC<MapProps> = ({
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const markersRef = useRef<mapboxgl.Marker[]>([]);
   const [mapboxToken, setMapboxToken] = useState<string>(
     'pk.eyJ1IjoiaGVtYW4tMDciLCJhIjoiY205aTVxbGdxMGE4ZzJqcXY5d2R0a2M3aCJ9.YCbFWOjZehRjsyQ7DyU49w'
   );
@@ -45,8 +44,6 @@ const Map: React.FC<MapProps> = ({
     // Initialize map with dark style
     mapboxgl.accessToken = token;
     
-    console.log('Initializing map...');
-    
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/dark-v11', // Using dark style to match the new theme
@@ -59,7 +56,7 @@ const Map: React.FC<MapProps> = ({
     // Mark the map as loaded when the style is fully loaded
     map.current.on('style.load', () => {
       if (!map.current) return;
-      console.log('Map style loaded, adding custom layer');
+      setMapLoaded(true);
       
       // Add a custom layer on top of the map with a slight gradient overlay
       map.current.addLayer({
@@ -89,9 +86,6 @@ const Map: React.FC<MapProps> = ({
           'fill-opacity': 0.15
         }
       });
-      
-      // Set mapLoaded to true AFTER all initial styling is done
-      setMapLoaded(true);
     });
 
     // Add navigation controls
@@ -117,10 +111,6 @@ const Map: React.FC<MapProps> = ({
 
     // Cleanup
     return () => {
-      // Clear all markers
-      markersRef.current.forEach(marker => marker.remove());
-      markersRef.current = [];
-      
       map.current?.remove();
       map.current = null;
       setMapLoaded(false);
@@ -129,41 +119,25 @@ const Map: React.FC<MapProps> = ({
 
   // Update map if route changes AND map style is loaded
   useEffect(() => {
-    if (!map.current || !mapLoaded || !startLocation || !endLocation || !routePoints || hidden) {
-      console.log('Map update conditions not met:', { 
-        mapExists: !!map.current, 
-        mapLoaded, 
-        hasStartLocation: !!startLocation, 
-        hasEndLocation: !!endLocation, 
-        hasRoutePoints: !!routePoints,
-        hidden
-      });
-      return;
-    }
+    if (!map.current || !mapLoaded || !startLocation || !endLocation || !routePoints || hidden) return;
 
-    console.log('Updating map with route and markers');
-    
-    // Clear existing markers
-    markersRef.current.forEach(marker => marker.remove());
-    markersRef.current = [];
+    // Clear existing markers if any
+    const existingMarkers = document.querySelectorAll('.mapboxgl-marker');
+    existingMarkers.forEach(marker => marker.remove());
 
     // Add markers for start and end locations
-    const startMarker = new mapboxgl.Marker({ color: '#00ADB5' }) // AI Glow accent color for start
+    new mapboxgl.Marker({ color: '#00ADB5' }) // AI Glow accent color for start
       .setLngLat(startLocation)
       .addTo(map.current);
-      
-    const endMarker = new mapboxgl.Marker({ color: '#FFA500' }) // Orange for destination
+
+    new mapboxgl.Marker({ color: '#FFA500' }) // Orange for destination
       .setLngLat(endLocation)
       .addTo(map.current);
-      
-    // Store references to markers for cleanup
-    markersRef.current.push(startMarker, endMarker);
 
     // Add route line if route points are provided
     if (routePoints.length > 0) {
       if (map.current.getSource('route')) {
         // Update existing source
-        console.log('Updating existing route source');
         (map.current.getSource('route') as mapboxgl.GeoJSONSource).setData({
           type: 'Feature',
           properties: {},
@@ -174,7 +148,6 @@ const Map: React.FC<MapProps> = ({
         });
       } else {
         // Add new source and layer
-        console.log('Adding new route source and layers');
         map.current.addSource('route', {
           type: 'geojson',
           data: {
