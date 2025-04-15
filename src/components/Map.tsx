@@ -80,7 +80,7 @@ const Map: React.FC<MapProps> = ({
       bearing: 20, // Slight rotation for better perspective
     });
 
-    // Mark the map as loaded when the style is fully loaded
+    // Setup an event listener for when the map style is fully loaded
     map.current.on('style.load', () => {
       if (!map.current) return;
       console.log('Map style loaded, adding custom layers');
@@ -209,6 +209,7 @@ const Map: React.FC<MapProps> = ({
 
     // Add route line if route points are provided
     if (routePoints.length > 0) {
+      // Check if the map has the route source already
       if (map.current.getSource('route')) {
         // Update existing source
         console.log('Updating existing route source');
@@ -619,7 +620,7 @@ const Map: React.FC<MapProps> = ({
     
     setTransitRoutes(mockRoutes);
     
-    // Add routes to the map
+    // Add routes to the map - only if the map style is loaded
     mockRoutes.forEach(route => {
       // Skip if source already exists
       if (map.current?.getSource(`route-${route.id}`)) return;
