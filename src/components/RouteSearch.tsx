@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search, MapPin, X, Filter, FigmaIcon } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -25,20 +24,23 @@ const RouteSearch: React.FC<RouteSearchProps> = ({
   const [showAccessible, setShowAccessible] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   
-  // Popular locations in Delhi for suggestions
+  // Popular locations in Chennai for suggestions
   const popularLocations = [
-    "Connaught Place",
-    "India Gate",
-    "Chandni Chowk",
-    "Karol Bagh",
-    "Lajpat Nagar",
-    "Hauz Khas",
-    "Rajiv Chowk",
-    "AIIMS",
-    "IGI Airport",
-    "Dwarka",
-    "Noida",
-    "Gurugram"
+    "T. Nagar",
+    "Anna Nagar",
+    "Adyar",
+    "Mylapore",
+    "Velachery",
+    "Chennai Central",
+    "Chennai Airport",
+    "Egmore",
+    "Guindy",
+    "Porur",
+    "Tambaram",
+    "Chromepet",
+    "Pallavaram",
+    "Besant Nagar",
+    "Marina Beach"
   ];
   
   const handleSearch = () => {
