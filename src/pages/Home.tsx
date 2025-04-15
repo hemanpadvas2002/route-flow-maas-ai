@@ -1,43 +1,22 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, MapPin, ArrowRight, Clock, Menu, Bell, X } from 'lucide-react';
+import { Search, MapPin, ArrowRight, Clock, Menu, Bell } from 'lucide-react';
 import Map from '../components/Map';
 import NavigationBar from '../components/NavigationBar';
-
-// Chennai popular locations
-const chennaiLocations = [
-  "T. Nagar",
-  "Anna Nagar",
-  "Adyar",
-  "Mylapore",
-  "Velachery",
-  "Chennai Central",
-  "Chennai Airport",
-  "Egmore",
-  "Guindy",
-  "Porur",
-  "Tambaram",
-  "Chromepet",
-  "Pallavaram",
-  "Besant Nagar",
-  "Marina Beach"
-];
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [fromLocation, setFromLocation] = useState('');
   const [toLocation, setToLocation] = useState('');
   const [showRecentSearches, setShowRecentSearches] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [activeSuggestionField, setActiveSuggestionField] = useState<'from' | 'to' | null>(null);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   // Mock recent search data
   const recentSearches = [
-    { from: 'Anna Nagar', to: 'T. Nagar', time: '9:00 AM' },
-    { from: 'Chennai Central', to: 'Chennai Airport', time: '5:30 PM' },
-    { from: 'Adyar', to: 'Egmore', time: '10:15 AM' },
+    { from: 'Home', to: 'Office', time: '9:00 AM' },
+    { from: 'Mall', to: 'Stadium', time: '5:30 PM' },
+    { from: 'Airport', to: 'Hotel Royal', time: '10:15 AM' },
   ];
 
   const handleSearch = () => {
@@ -48,18 +27,15 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleFocus = (field: 'from' | 'to') => {
+  const handleFocus = () => {
     setShowRecentSearches(true);
     setIsSearchExpanded(true);
-    setShowSuggestions(true);
-    setActiveSuggestionField(field);
   };
 
   const handleBlur = () => {
     // Adding a delay to allow click events on recent searches
     setTimeout(() => {
       setShowRecentSearches(false);
-      setShowSuggestions(false);
     }, 200);
   };
 
@@ -74,43 +50,6 @@ const Home: React.FC = () => {
         state: { fromLocation: from, toLocation: to } 
       });
     }, 300);
-  };
-
-  const selectLocation = (location: string) => {
-    if (activeSuggestionField === 'from') {
-      setFromLocation(location);
-      // Auto-focus the "to" field after selecting "from"
-      setActiveSuggestionField('to');
-    } else if (activeSuggestionField === 'to') {
-      setToLocation(location);
-      setShowSuggestions(false);
-      
-      // If both fields are filled, navigate to route selection
-      if (fromLocation) {
-        setTimeout(() => {
-          navigate('/route-selection', { 
-            state: { fromLocation, toLocation: location } 
-          });
-        }, 300);
-      }
-    }
-  };
-
-  const clearInput = (field: 'from' | 'to') => {
-    if (field === 'from') {
-      setFromLocation('');
-    } else {
-      setToLocation('');
-    }
-  };
-
-  // Filter suggestions based on input
-  const filteredLocations = (input: string) => {
-    if (!input) return chennaiLocations;
-    const lowerInput = input.toLowerCase();
-    return chennaiLocations.filter(location => 
-      location.toLowerCase().includes(lowerInput)
-    );
   };
 
   return (
@@ -150,21 +89,13 @@ const Home: React.FC = () => {
                 </div>
                 <input
                   type="text"
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white"
                   placeholder="From"
                   value={fromLocation}
                   onChange={(e) => setFromLocation(e.target.value)}
-                  onFocus={() => handleFocus('from')}
+                  onFocus={handleFocus}
                   onBlur={handleBlur}
                 />
-                {fromLocation && (
-                  <button 
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => clearInput('from')}
-                  >
-                    <X className="h-5 w-5 text-gray-400 dark:text-gray-500" />
-                  </button>
-                )}
               </div>
               
               <div className="relative">
@@ -173,21 +104,13 @@ const Home: React.FC = () => {
                 </div>
                 <input
                   type="text"
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white"
                   placeholder="To"
                   value={toLocation}
                   onChange={(e) => setToLocation(e.target.value)}
-                  onFocus={() => handleFocus('to')}
+                  onFocus={handleFocus}
                   onBlur={handleBlur}
                 />
-                {toLocation && (
-                  <button 
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => clearInput('to')}
-                  >
-                    <X className="h-5 w-5 text-gray-400 dark:text-gray-500" />
-                  </button>
-                )}
               </div>
             </div>
             
@@ -204,31 +127,8 @@ const Home: React.FC = () => {
             </button>
           </div>
           
-          {/* Chennai location suggestions */}
-          {showSuggestions && (
-            <div className="border-t border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto">
-              <h2 className="px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800">
-                Chennai Locations
-              </h2>
-              <ul>
-                {filteredLocations(activeSuggestionField === 'from' ? fromLocation : toLocation).map((location, index) => (
-                  <li 
-                    key={index} 
-                    className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-800"
-                    onClick={() => selectLocation(location)}
-                  >
-                    <div className="flex items-center">
-                      <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500 mr-2" />
-                      <span className="font-medium text-gray-800 dark:text-gray-200">{location}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          
           {/* Recent searches */}
-          {showRecentSearches && !showSuggestions && (
+          {showRecentSearches && (
             <div className="border-t border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto">
               <h2 className="px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800">Recent Searches</h2>
               <ul>

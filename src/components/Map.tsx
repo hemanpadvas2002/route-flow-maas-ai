@@ -9,7 +9,6 @@ interface MapProps {
   routePoints?: [number, number][];
   className?: string;
   collapsed?: boolean;
-  hidden?: boolean;
 }
 
 const Map: React.FC<MapProps> = ({ 
@@ -17,15 +16,14 @@ const Map: React.FC<MapProps> = ({
   endLocation, 
   routePoints, 
   className = "", 
-  collapsed = false,
-  hidden = false
+  collapsed = false 
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [mapboxToken, setMapboxToken] = useState<string>('');
 
   useEffect(() => {
-    if (!mapContainer.current || hidden) return;
+    if (!mapContainer.current) return;
     
     // In a real app, this would be securely stored in environment variables
     // Using a temporary state variable for demo purposes only
@@ -75,11 +73,11 @@ const Map: React.FC<MapProps> = ({
       map.current?.remove();
       map.current = null;
     };
-  }, [mapboxToken, startLocation, hidden]);
+  }, [mapboxToken, startLocation]);
 
   // Update map if route changes
   useEffect(() => {
-    if (!map.current || !startLocation || !endLocation || !routePoints || hidden) return;
+    if (!map.current || !startLocation || !endLocation || !routePoints) return;
 
     // Add markers for start and end locations
     new mapboxgl.Marker({ color: '#4CAF50' })
@@ -136,15 +134,11 @@ const Map: React.FC<MapProps> = ({
       routePoints.forEach(point => bounds.extend(point as mapboxgl.LngLatLike));
       map.current.fitBounds(bounds, { padding: 50 });
     }
-  }, [startLocation, endLocation, routePoints, hidden]);
+  }, [startLocation, endLocation, routePoints]);
 
   const handleTokenInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMapboxToken(e.target.value);
   };
-
-  if (hidden) {
-    return null;
-  }
 
   return (
     <div className={`relative ${className} ${collapsed ? 'h-32' : 'h-full min-h-[calc(100vh-116px)]'}`}>

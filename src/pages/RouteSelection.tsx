@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronDown, ChevronUp, Map as MapIcon } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import Map from '../components/Map';
 import TransportModeSelector from '../components/TransportModeSelector';
 import RouteTimeline from '../components/RouteTimeline';
@@ -21,8 +21,8 @@ const RouteSelection: React.FC = () => {
   
   const [selectedMode, setSelectedMode] = useState('bus');
   const [selectedRouteId, setSelectedRouteId] = useState<string | undefined>(undefined);
-  const [expandedView, setExpandedView] = useState(true); // Default to expanded view
-  const [mapVisible, setMapVisible] = useState(false); // Hide map by default
+  const [expandedView, setExpandedView] = useState(false);
+  const [mapCollapsed, setMapCollapsed] = useState(false);
 
   // Mock route data
   const routes = [
@@ -154,15 +154,13 @@ const RouteSelection: React.FC = () => {
 
   const toggleExpandedView = () => {
     setExpandedView(!expandedView);
-  };
-
-  const toggleMapVisibility = () => {
-    setMapVisible(!mapVisible);
+    setMapCollapsed(expandedView ? false : true);
   };
 
   const handleSelectRoute = (routeId: string) => {
     setSelectedRouteId(routeId);
     setExpandedView(true);
+    setMapCollapsed(true);
   };
 
   const handleBookTicket = () => {
@@ -183,39 +181,39 @@ const RouteSelection: React.FC = () => {
     <div className="min-h-screen bg-gray-100 flex flex-col pb-16">
       <StatusBar style="light" />
       
-      {/* Toggle button for map visibility */}
-      <div className="bg-white py-3 px-4 flex justify-between items-center shadow-sm">
-        <div>
-          <h2 className="font-bold text-lg">{fromLocation} to {toLocation}</h2>
-          <p className="text-sm text-gray-500">
-            {selectedRoute?.totalDuration || 0} min · 
-            {selectedRoute?.totalDistance.toFixed(1) || 0} km
-          </p>
+      {/* Top section with map */}
+      <div className={`relative transition-all duration-300 ease-in-out ${mapCollapsed ? 'h-32' : 'h-[40vh]'}`}>
+        <Map 
+          collapsed={mapCollapsed}
+          startLocation={[77.2090, 28.6139]} // Dummy coordinates for Delhi
+          endLocation={[77.2300, 28.6600]} 
+          routePoints={[
+            [77.2090, 28.6139],
+            [77.2150, 28.6250],
+            [77.2200, 28.6400],
+            [77.2300, 28.6600]
+          ]}
+        />
+        
+        {/* Route summary header */}
+        <div className="absolute bottom-0 left-0 right-0 bg-white p-4 rounded-t-xl shadow-md">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="font-bold text-lg">{fromLocation} to {toLocation}</h2>
+              <p className="text-sm text-gray-500">
+                {selectedRoute?.totalDuration || 0} min · 
+                {selectedRoute?.totalDistance.toFixed(1) || 0} km
+              </p>
+            </div>
+            <button 
+              className="p-2 bg-gray-100 rounded-full"
+              onClick={toggleExpandedView}
+            >
+              {expandedView ? <ChevronDown /> : <ChevronUp />}
+            </button>
+          </div>
         </div>
-        <button 
-          className="p-2 bg-gray-100 rounded-full flex items-center justify-center"
-          onClick={toggleMapVisibility}
-          aria-label="Toggle map"
-        >
-          <MapIcon size={20} className={mapVisible ? "text-blue-500" : "text-gray-500"} />
-        </button>
       </div>
-      
-      {/* Map (hidden by default) */}
-      {mapVisible && (
-        <div className="h-[40vh] relative">
-          <Map 
-            startLocation={[77.2090, 28.6139]} // Dummy coordinates for Delhi
-            endLocation={[77.2300, 28.6600]} 
-            routePoints={[
-              [77.2090, 28.6139],
-              [77.2150, 28.6250],
-              [77.2200, 28.6400],
-              [77.2300, 28.6600]
-            ]}
-          />
-        </div>
-      )}
       
       {/* Transport mode selector */}
       <div className="bg-white border-b border-gray-200 shadow-sm">
