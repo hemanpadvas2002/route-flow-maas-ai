@@ -228,8 +228,6 @@ const ArgoMap: React.FC = () => {
         totalDuration: 35,
         totalDistance: 9.3,
         totalPrice: 150,
-        departureTime: '09:00',
-        arrivalTime: '09:35',
         crowdLevel: 'low'
       },
     ];
