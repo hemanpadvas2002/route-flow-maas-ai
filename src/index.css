@@ -91,16 +91,22 @@
 
   body {
     @apply bg-background text-foreground;
+    background: linear-gradient(to bottom, #1E1E2F, #2C2C3A, #3E3E55);
+    color: #ffffff;
+    min-height: 100vh;
   }
 }
 
 @layer components {
+  /* Transport mode styling */
   .transport-pill {
     @apply px-4 py-2 rounded-full flex items-center gap-2 text-white font-medium;
   }
   
+  /* Ticket styling */
   .ticket-card {
     @apply relative overflow-hidden rounded-lg shadow-lg;
+    background: linear-gradient(to bottom right, #0F2027, #203A43, #2C5364);
   }
   
   .ticket-card::before {
@@ -109,19 +115,136 @@
   }
   
   .boarding-pass {
-    @apply relative bg-white rounded-xl shadow-xl overflow-hidden;
+    @apply relative rounded-xl shadow-xl overflow-hidden;
+    background: linear-gradient(to bottom, #222831, #393E46);
   }
   
   .boarding-pass::after {
     content: '';
-    @apply absolute w-full h-4 left-0 border-b border-dashed border-gray-300;
+    @apply absolute w-full h-4 left-0 border-b border-dashed border-gray-600;
   }
   
+  /* Map container styling */
   .map-search-container {
     @apply relative z-10 w-full;
+    background: linear-gradient(to bottom, rgba(30, 30, 47, 0.9), rgba(44, 44, 58, 0.9));
   }
   
+  /* Route timeline styling */
   .route-timeline-container {
-    @apply rounded-t-3xl bg-white shadow-lg relative z-20 -mt-6;
+    @apply rounded-t-3xl relative z-20 -mt-6;
+    background: linear-gradient(to bottom, #0F2027, #203A43);
+  }
+
+  /* Transport mode colors */
+  .transport-bus {
+    background-color: #FFA500; /* Orange */
+  }
+  
+  .transport-train, .transport-metro {
+    background-color: #4CAF50; /* Green */
+  }
+  
+  .transport-metro {
+    background-color: #1E88E5; /* Blue */
+  }
+  
+  .transport-taxi {
+    background-color: #FFEB3B; /* Yellow */
+    color: #333; /* Darker text for visibility */
+  }
+  
+  .transport-walking {
+    background-color: #BDBDBD; /* Light Grey */
+  }
+  
+  .transport-ferry {
+    background-color: #0D47A1; /* Navy Blue */
+  }
+  
+  .transport-cycling {
+    background-color: #8BC34A; /* Lime Green */
+  }
+
+  /* AI Glow effect */
+  .ai-glow {
+    box-shadow: 0 0 15px rgba(0, 173, 181, 0.7);
+    border: 1px solid #00ADB5;
+  }
+  
+  .progress-indicator {
+    background: linear-gradient(to right, #222831, #393E46);
+    position: relative;
+  }
+  
+  .progress-indicator::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #00ADB5;
+    animation: progress 2s ease-in-out infinite;
+  }
+  
+  @keyframes progress {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+  }
+  
+  /* NFC Animation */
+  .nfc-pulse {
+    animation: nfc-pulse 2s infinite;
+  }
+  
+  @keyframes nfc-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(0, 173, 181, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 20px rgba(0, 173, 181, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 173, 181, 0);
+    }
+  }
+  
+  /* Bottom drawer */
+  .bottom-drawer {
+    background: linear-gradient(to bottom, #222831, #393E46);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Card styles */
+  .maas-card {
+    background: linear-gradient(to bottom right, #0F2027, #203A43, #2C5364);
+    @apply rounded-xl shadow-lg overflow-hidden border border-gray-700;
+  }
+  
+  /* Button styles */
+  .maas-button {
+    background: linear-gradient(to right, #0F2027, #203A43, #2C5364);
+    @apply text-white font-medium py-3 px-6 rounded-lg transition-all duration-300;
+  }
+  
+  .maas-button-glow {
+    background: linear-gradient(to right, #222831, #393E46);
+    border: 1px solid #00ADB5;
+    box-shadow: 0 0 10px rgba(0, 173, 181, 0.5);
+    @apply text-white font-medium py-3 px-6 rounded-lg transition-all duration-300;
+  }
+  
+  .maas-button-glow:hover {
+    box-shadow: 0 0 20px rgba(0, 173, 181, 0.8);
+  }
+  
+  /* Input styles */
+  .maas-input {
+    background: rgba(30, 30, 47, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    @apply text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5];
   }
 }

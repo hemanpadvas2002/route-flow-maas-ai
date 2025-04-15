@@ -50,15 +50,49 @@ const Map: React.FC<MapProps> = ({
       bearing: 20, // Slight rotation for better perspective
     });
 
+    // Customize the map to match our theme
+    map.current.on('load', () => {
+      if (!map.current) return;
+      
+      // Add a custom layer on top of the map with a slight gradient overlay
+      map.current.addLayer({
+        id: 'gradient-overlay',
+        type: 'fill',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [-180, -90],
+                  [180, -90],
+                  [180, 90],
+                  [-180, 90],
+                  [-180, -90]
+                ]
+              ]
+            }
+          }
+        },
+        paint: {
+          'fill-color': '#1E1E2F',
+          'fill-opacity': 0.15
+        }
+      });
+    });
+
     // Add navigation controls
     map.current.addControl(
       new mapboxgl.NavigationControl({
         showCompass: false,
+        visualizePitch: true
       }),
       'top-right'
     );
 
-    // Add geolocation control
+    // Add geolocation control with custom styling
     map.current.addControl(
       new mapboxgl.GeolocateControl({
         positionOptions: {
@@ -82,11 +116,11 @@ const Map: React.FC<MapProps> = ({
     if (!map.current || !startLocation || !endLocation || !routePoints || hidden) return;
 
     // Add markers for start and end locations
-    new mapboxgl.Marker({ color: '#4CAF50' })
+    new mapboxgl.Marker({ color: '#00ADB5' }) // AI Glow accent color for start
       .setLngLat(startLocation)
       .addTo(map.current);
 
-    new mapboxgl.Marker({ color: '#F44336' })
+    new mapboxgl.Marker({ color: '#FFA500' }) // Orange for destination
       .setLngLat(endLocation)
       .addTo(map.current);
 
@@ -116,8 +150,9 @@ const Map: React.FC<MapProps> = ({
           },
         });
 
+        // Create an animated flow effect along the route
         map.current.addLayer({
-          id: 'route',
+          id: 'route-base',
           type: 'line',
           source: 'route',
           layout: {
@@ -125,9 +160,24 @@ const Map: React.FC<MapProps> = ({
             'line-cap': 'round',
           },
           paint: {
-            'line-color': '#1E88E5',
-            'line-width': 5,
+            'line-color': '#203A43', // Mobility Blue base
+            'line-width': 6,
             'line-opacity': 0.8,
+          },
+        });
+
+        map.current.addLayer({
+          id: 'route-glow',
+          type: 'line',
+          source: 'route',
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round',
+          },
+          paint: {
+            'line-color': '#00ADB5', // AI Glow accent
+            'line-width': 3,
+            'line-opacity': 0.9,
           },
         });
       }

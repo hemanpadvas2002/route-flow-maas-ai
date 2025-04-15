@@ -33,7 +33,7 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
     if (!themeColor) {
       const meta = document.createElement('meta');
       meta.name = 'theme-color';
-      meta.content = '#ffffff';
+      meta.content = '#1E1E2F';
       document.head.appendChild(meta);
     }
     
@@ -55,6 +55,9 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
         -webkit-tap-highlight-color: transparent;
         overscroll-behavior: none;
         touch-action: manipulation;
+        background: linear-gradient(to bottom, #1E1E2F, #2C2C3A, #3E3E55);
+        min-height: 100vh;
+        color: #ffffff;
       }
       
       .app-container {
@@ -66,6 +69,9 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
       }
     `;
     document.head.appendChild(style);
+    
+    // Force dark mode
+    document.documentElement.classList.add('dark');
   }, []);
 
   return (
