@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronLeft, CreditCard, Calendar, User, Plus, Minus } from 'lucide-react';
 import NfcPayment from '../components/NfcPayment';
-import { useTheme } from '../contexts/ThemeContext';
 
 interface RouteSegment {
   id: string;
@@ -37,7 +36,6 @@ interface LocationState {
 const TicketBooking: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { theme } = useTheme();
   const { route, fromLocation, toLocation } = (location.state as LocationState) || {};
   
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'nfc'>('nfc');
@@ -100,31 +98,15 @@ const TicketBooking: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const bgColor = theme === 'dark' 
-    ? 'linear-gradient(to bottom, #1E1E2F, #2C2C3A, #3E3E55)'
-    : '#f5f5f5';
-  
-  const cardBgColor = theme === 'dark'
-    ? 'linear-gradient(to bottom, #0F2027, #203A43, #2C5364)'
-    : 'white';
-  
-  const textColor = theme === 'dark' ? 'text-white' : 'text-gray-800';
-  const subtextColor = theme === 'dark' ? 'text-gray-300' : 'text-gray-600';
-  const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
-
   return (
-    <div className="min-h-screen" style={{ background: bgColor }}>
+    <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <div className="p-4" style={{ 
-        background: theme === 'dark' 
-          ? 'linear-gradient(to right, #0F2027, #203A43, #2C5364)'
-          : 'linear-gradient(to right, #e0e0e0, #f5f5f5)'
-      }}>
+      <div className="bg-blue-600 text-white p-4">
         <div className="flex items-center">
-          <button className={`mr-2 ${textColor}`} onClick={handleBack}>
+          <button className="mr-2" onClick={handleBack}>
             <ChevronLeft className="h-6 w-6" />
           </button>
-          <h1 className={`text-xl font-bold ${textColor}`}>Book Ticket</h1>
+          <h1 className="text-xl font-bold">Book Ticket</h1>
         </div>
       </div>
       
@@ -138,41 +120,41 @@ const TicketBooking: React.FC = () => {
       ) : (
         <>
           {/* Trip Summary */}
-          <div className="p-4 mb-4 rounded-lg shadow-sm" style={{ background: cardBgColor }}>
-            <h2 className={`text-lg font-semibold mb-2 ${textColor}`}>Trip Summary</h2>
+          <div className="p-4 bg-white mb-4 shadow-sm">
+            <h2 className="text-lg font-semibold mb-2">Trip Summary</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className={subtextColor}>From</p>
-                <p className={`font-medium ${textColor}`}>{fromLocation}</p>
+                <p className="text-sm text-gray-500">From</p>
+                <p className="font-medium">{fromLocation}</p>
               </div>
               <div>
-                <p className={subtextColor}>To</p>
-                <p className={`font-medium ${textColor}`}>{toLocation}</p>
+                <p className="text-sm text-gray-500">To</p>
+                <p className="font-medium">{toLocation}</p>
               </div>
               <div>
-                <p className={subtextColor}>Date</p>
-                <p className={`font-medium ${textColor}`}>Today</p>
+                <p className="text-sm text-gray-500">Date</p>
+                <p className="font-medium">Today</p>
               </div>
               <div>
-                <p className={subtextColor}>Time</p>
-                <p className={`font-medium ${textColor}`}>{route.departureTime} - {route.arrivalTime}</p>
+                <p className="text-sm text-gray-500">Time</p>
+                <p className="font-medium">{route.departureTime} - {route.arrivalTime}</p>
               </div>
             </div>
           </div>
           
           {/* Transport Mode */}
-          <div className="p-4 mb-4 rounded-lg shadow-sm" style={{ background: cardBgColor }}>
-            <h2 className={`text-lg font-semibold mb-2 ${textColor}`}>Transport Details</h2>
+          <div className="p-4 bg-white mb-4 shadow-sm">
+            <h2 className="text-lg font-semibold mb-2">Transport Details</h2>
             <div>
               {route.segments
                 .filter(segment => segment.mode !== 'walking')
                 .map((segment, index) => (
                   <div key={segment.id} className="mb-3 last:mb-0">
                     <div className="flex justify-between mb-1">
-                      <div className={`font-medium capitalize ${textColor}`}>{segment.mode} {segment.routeIdentifier}</div>
-                      <div className={`font-semibold ${textColor}`}>₹{segment.price}</div>
+                      <div className="font-medium capitalize">{segment.mode} {segment.routeIdentifier}</div>
+                      <div className="font-semibold">₹{segment.price}</div>
                     </div>
-                    <div className={subtextColor}>
+                    <div className="text-sm text-gray-500">
                       {segment.startLocation} to {segment.endLocation} • {segment.duration} min
                     </div>
                   </div>
@@ -181,49 +163,45 @@ const TicketBooking: React.FC = () => {
           </div>
           
           {/* Passenger Count */}
-          <div className="p-4 mb-4 rounded-lg shadow-sm" style={{ background: cardBgColor }}>
-            <h2 className={`text-lg font-semibold mb-3 ${textColor}`}>Passengers</h2>
+          <div className="p-4 bg-white mb-4 shadow-sm">
+            <h2 className="text-lg font-semibold mb-3">Passengers</h2>
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <User className={`h-5 w-5 mr-2 ${subtextColor}`} />
-                <span className={textColor}>Number of Passengers</span>
+                <User className="h-5 w-5 mr-2 text-gray-500" />
+                <span>Number of Passengers</span>
               </div>
               <div className="flex items-center">
                 <button 
-                  className={`p-1 rounded-full ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}
+                  className="p-1 bg-gray-200 rounded-full"
                   onClick={decrementPassengerCount}
                   disabled={passengerCount <= 1}
                 >
-                  <Minus className={`h-4 w-4 ${textColor}`} />
+                  <Minus className="h-4 w-4" />
                 </button>
-                <span className={`mx-3 font-medium ${textColor}`}>{passengerCount}</span>
+                <span className="mx-3 font-medium">{passengerCount}</span>
                 <button 
-                  className={`p-1 rounded-full ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}
+                  className="p-1 bg-gray-200 rounded-full"
                   onClick={incrementPassengerCount}
                   disabled={passengerCount >= 10}
                 >
-                  <Plus className={`h-4 w-4 ${textColor}`} />
+                  <Plus className="h-4 w-4" />
                 </button>
               </div>
             </div>
           </div>
           
           {/* Payment Methods */}
-          <div className="p-4 mb-4 rounded-lg shadow-sm" style={{ background: cardBgColor }}>
-            <h2 className={`text-lg font-semibold mb-3 ${textColor}`}>Payment Method</h2>
+          <div className="p-4 bg-white mb-4 shadow-sm">
+            <h2 className="text-lg font-semibold mb-3">Payment Method</h2>
             <div className="grid grid-cols-2 gap-3">
               <div 
                 className={`border rounded-lg p-3 flex items-center ${
-                  paymentMethod === 'nfc' 
-                    ? 'border-[#00ADB5] bg-[#00ADB5]/10' 
-                    : `${borderColor} ${theme === 'dark' ? 'bg-gray-800/50' : 'bg-gray-100'}`
+                  paymentMethod === 'nfc' ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
                 }`}
                 onClick={() => handlePaymentMethodChange('nfc')}
               >
                 <div className={`w-5 h-5 rounded-full mr-2 border ${
-                  paymentMethod === 'nfc' 
-                    ? 'border-[#00ADB5] bg-[#00ADB5]' 
-                    : `${borderColor} ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`
+                  paymentMethod === 'nfc' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
                 }`}>
                   {paymentMethod === 'nfc' && (
                     <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -231,21 +209,17 @@ const TicketBooking: React.FC = () => {
                     </svg>
                   )}
                 </div>
-                <div className={`font-medium ${textColor}`}>NFC Payment</div>
+                <div className="font-medium">NFC Payment</div>
               </div>
               
               <div 
                 className={`border rounded-lg p-3 flex items-center ${
-                  paymentMethod === 'card' 
-                    ? 'border-[#00ADB5] bg-[#00ADB5]/10' 
-                    : `${borderColor} ${theme === 'dark' ? 'bg-gray-800/50' : 'bg-gray-100'}`
+                  paymentMethod === 'card' ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
                 }`}
                 onClick={() => handlePaymentMethodChange('card')}
               >
                 <div className={`w-5 h-5 rounded-full mr-2 border ${
-                  paymentMethod === 'card' 
-                    ? 'border-[#00ADB5] bg-[#00ADB5]' 
-                    : `${borderColor} ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`
+                  paymentMethod === 'card' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
                 }`}>
                   {paymentMethod === 'card' && (
                     <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -253,37 +227,33 @@ const TicketBooking: React.FC = () => {
                     </svg>
                   )}
                 </div>
-                <div className={`font-medium ${textColor}`}>Card</div>
+                <div className="font-medium">Card</div>
               </div>
             </div>
           </div>
           
           {/* Price Summary */}
-          <div className="p-4 mb-4 rounded-lg shadow-sm" style={{ background: cardBgColor }}>
-            <h2 className={`text-lg font-semibold mb-2 ${textColor}`}>Price Summary</h2>
+          <div className="p-4 bg-white mb-4 shadow-sm">
+            <h2 className="text-lg font-semibold mb-2">Price Summary</h2>
             <div className="flex justify-between py-2">
-              <span className={textColor}>Base Fare</span>
-              <span className={textColor}>₹{route.totalPrice.toFixed(2)}</span>
+              <span>Base Fare</span>
+              <span>₹{route.totalPrice.toFixed(2)}</span>
             </div>
             <div className="flex justify-between py-2">
-              <span className={textColor}>Passengers</span>
-              <span className={textColor}>x {passengerCount}</span>
+              <span>Passengers</span>
+              <span>x {passengerCount}</span>
             </div>
-            <div className={`flex justify-between py-2 font-semibold text-lg border-t ${borderColor} mt-2 pt-2`}>
-              <span className={textColor}>Total</span>
-              <span className={textColor}>₹{getTotalPrice().toFixed(2)}</span>
+            <div className="flex justify-between py-2 font-semibold text-lg border-t border-gray-200 mt-2 pt-2">
+              <span>Total</span>
+              <span>₹{getTotalPrice().toFixed(2)}</span>
             </div>
           </div>
           
           {/* Action Button */}
           <div className="p-4">
             <button
-              className="w-full py-3 rounded-lg text-white font-medium"
+              className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium"
               onClick={handleProceedToPayment}
-              style={{ 
-                background: 'linear-gradient(to right, #0F2027, #203A43, #2C5364)',
-                boxShadow: '0 0 10px rgba(0, 173, 181, 0.3)'
-              }}
             >
               Proceed to Payment
             </button>

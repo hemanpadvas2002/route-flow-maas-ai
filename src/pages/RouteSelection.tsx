@@ -180,24 +180,24 @@ const RouteSelection: React.FC = () => {
   const selectedRoute = routes.find(route => route.id === selectedRouteId);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col pb-16">
-      <StatusBar style="light" />
+    <div className="min-h-screen bg-gradient-to-b from-[#1E1E2F] via-[#2C2C3A] to-[#3E3E55] flex flex-col pb-16">
+      <StatusBar style="dark" />
       
       {/* Toggle button for map visibility */}
-      <div className="bg-white py-3 px-4 flex justify-between items-center shadow-sm">
+      <div className="bg-[#2C2C3A] border-b border-[#3E3E55] py-3 px-4 flex justify-between items-center shadow-sm">
         <div>
-          <h2 className="font-bold text-lg">{fromLocation} to {toLocation}</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="font-bold text-lg text-white">{fromLocation} to {toLocation}</h2>
+          <p className="text-sm text-gray-300">
             {selectedRoute?.totalDuration || 0} min · 
             {selectedRoute?.totalDistance.toFixed(1) || 0} km
           </p>
         </div>
         <button 
-          className="p-2 bg-gray-100 rounded-full flex items-center justify-center"
+          className="p-2 bg-[#1E1E2F] rounded-full flex items-center justify-center"
           onClick={toggleMapVisibility}
           aria-label="Toggle map"
         >
-          <MapIcon size={20} className={mapVisible ? "text-blue-500" : "text-gray-500"} />
+          <MapIcon size={20} className={mapVisible ? "text-blue-400" : "text-gray-400"} />
         </button>
       </div>
       
@@ -218,7 +218,7 @@ const RouteSelection: React.FC = () => {
       )}
       
       {/* Transport mode selector */}
-      <div className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="bg-[#2C2C3A] border-b border-[#3E3E55] shadow-sm">
         <TransportModeSelector 
           selectedMode={selectedMode}
           onSelectMode={(mode) => {
@@ -229,7 +229,7 @@ const RouteSelection: React.FC = () => {
       </div>
       
       {/* Route timeline section */}
-      <div className="flex-grow bg-gray-50 overflow-y-auto">
+      <div className="flex-grow bg-[#1E1E2F] overflow-y-auto">
         <RouteTimeline 
           routes={routes}
           selectedRouteId={selectedRouteId}
@@ -239,9 +239,9 @@ const RouteSelection: React.FC = () => {
       </div>
       
       {/* Bottom action button */}
-      <div className="fixed bottom-16 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg">
+      <div className="fixed bottom-16 left-0 right-0 p-4 bg-[#1E1E2F]/90 backdrop-blur-sm border-t border-[#3E3E55] shadow-lg">
         <Button
-          className="w-full py-6 rounded-lg bg-blue-600 text-white font-medium text-lg"
+          className="w-full py-6 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-lg"
           onClick={handleBookTicket}
         >
           Book Ticket

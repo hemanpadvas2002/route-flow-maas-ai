@@ -11,10 +11,8 @@ import TicketBooking from "./pages/TicketBooking";
 import TicketView from "./pages/TicketView";
 import TicketsPage from "./pages/TicketsPage";
 import ProfilePage from "./pages/ProfilePage";
-import ArgoMap from "./pages/ArgoMap";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
-import { ThemeProvider } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +28,7 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
       document.head.appendChild(meta);
     }
     
-    // Add status bar color for Android
+    // Add status bar color for Android to match our theme
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (!themeColor) {
       const meta = document.createElement('meta');
@@ -65,6 +63,8 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
         max-width: 100%;
         overflow-x: hidden;
         position: relative;
+        background: linear-gradient(to bottom, #1E1E2F, #2C2C3A, #3E3E55);
+        min-height: 100vh;
       }
     `;
     document.head.appendChild(style);
@@ -79,27 +79,24 @@ const AppContainer = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AppContainer>
-            <Routes>
-              <Route path="/" element={<ArgoMap />} />
-              <Route path="/old-home" element={<Home />} />
-              <Route path="/route-selection" element={<RouteSelection />} />
-              <Route path="/route-details/:routeId" element={<RouteDetails />} />
-              <Route path="/ticket-booking" element={<TicketBooking />} />
-              <Route path="/ticket-view" element={<TicketView />} />
-              <Route path="/tickets" element={<TicketsPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AppContainer>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <AppContainer>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/route-selection" element={<RouteSelection />} />
+            <Route path="/route-details/:routeId" element={<RouteDetails />} />
+            <Route path="/ticket-booking" element={<TicketBooking />} />
+            <Route path="/ticket-view" element={<TicketView />} />
+            <Route path="/tickets" element={<TicketsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AppContainer>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 

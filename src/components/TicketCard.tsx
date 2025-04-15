@@ -60,16 +60,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
   return (
     <div className={`boarding-pass relative max-w-sm mx-auto ${expired ? 'opacity-70' : ''}`}>
       {/* Top section with transport info */}
-      <div style={{ backgroundColor: color }} className="p-5 text-white relative overflow-hidden">
-        {/* Add a subtle pattern overlay */}
-        <div className="absolute inset-0 opacity-10" 
-          style={{ 
-            backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-            backgroundSize: '15px 15px'
-          }} 
-        />
-        
-        <div className="flex justify-between items-center relative z-10">
+      <div style={{ backgroundColor: color }} className="p-5 text-white">
+        <div className="flex justify-between items-center">
           <div className="flex items-center">
             <div className="bg-white/20 rounded-full p-2 mr-3">
               {icon}
@@ -86,55 +78,54 @@ const TicketCard: React.FC<TicketCardProps> = ({
         </div>
       </div>
       
-      {/* Ticket details - using our gradient */}
-      <div className="p-5" style={{ background: 'linear-gradient(to bottom right, #0F2027, #203A43, #2C5364)' }}>
+      {/* Ticket details */}
+      <div className="p-5 bg-white">
         <div className="grid grid-cols-2 gap-6 mb-6">
           <div>
-            <div className="text-xs text-gray-300">From</div>
-            <div className="font-bold text-lg truncate text-white">{startLocation}</div>
-            <div className="text-sm text-gray-200">{departureTime}</div>
+            <div className="text-xs text-gray-500">From</div>
+            <div className="font-bold text-lg truncate">{startLocation}</div>
+            <div className="text-sm">{departureTime}</div>
           </div>
           <div>
-            <div className="text-xs text-gray-300">To</div>
-            <div className="font-bold text-lg truncate text-white">{endLocation}</div>
-            <div className="text-sm text-gray-200">{arrivalTime}</div>
+            <div className="text-xs text-gray-500">To</div>
+            <div className="font-bold text-lg truncate">{endLocation}</div>
+            <div className="text-sm">{arrivalTime}</div>
           </div>
         </div>
         
         <div className="flex justify-between items-center mb-6">
           <div>
-            <div className="text-xs text-gray-300">Date</div>
-            <div className="font-medium text-white">{date}</div>
+            <div className="text-xs text-gray-500">Date</div>
+            <div className="font-medium">{date}</div>
           </div>
           <div>
-            <div className="text-xs text-gray-300">Passenger</div>
-            <div className="font-medium text-white">{passengerName}</div>
+            <div className="text-xs text-gray-500">Passenger</div>
+            <div className="font-medium">{passengerName}</div>
           </div>
         </div>
       </div>
       
       {/* Barcode & ticket ID section */}
-      <div className="p-5 border-t border-dashed border-gray-600 flex flex-col items-center"
-        style={{ background: 'linear-gradient(to bottom, #222831, #393E46)' }}>
+      <div className="p-5 bg-gray-50 border-t border-dashed border-gray-300 flex flex-col items-center">
         <div className="mb-2 w-full">
           <div className="flex space-x-[2px] justify-center">
             {barcodePattern.map((width, i) => (
               <div
                 key={i}
                 style={{ width: `${width}px` }}
-                className="h-14 bg-white"
+                className="h-14 bg-gray-800"
               />
             ))}
           </div>
         </div>
-        <div className="text-center text-xs font-mono text-gray-300">
+        <div className="text-center text-xs font-mono text-gray-600">
           {ticketId}
         </div>
       </div>
       
       {expired && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="bg-[#222831]/90 px-6 py-2 rounded-full border-2 border-red-500 text-red-500 font-bold text-xl transform rotate-[-20deg]">
+          <div className="bg-white/80 px-6 py-2 rounded-full border-2 border-red-500 text-red-500 font-bold text-xl transform rotate-[-20deg]">
             EXPIRED
           </div>
         </div>
