@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Bus, Train, Car, UserRound, Ship, Bike } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface TransportMode {
   id: string;
@@ -18,6 +19,8 @@ const TransportModeSelector: React.FC<TransportModeSelectorProps> = ({
   selectedMode,
   onSelectMode,
 }) => {
+  const { theme } = useTheme();
+  
   const transportModes: TransportMode[] = [
     {
       id: 'bus',
@@ -64,14 +67,22 @@ const TransportModeSelector: React.FC<TransportModeSelectorProps> = ({
   ];
 
   return (
-    <div className="transport-mode-selector overflow-x-auto py-3 px-2">
+    <div 
+      className="transport-mode-selector overflow-x-auto py-4 px-2" 
+      style={{ 
+        background: theme === 'dark' 
+          ? 'linear-gradient(to right, #1E1E2F, #2C2C3A)' 
+          : 'linear-gradient(to right, #f5f5f5, #e0e0e0)' 
+      }}
+    >
       <div className="flex space-x-3 min-w-max px-2">
         {transportModes.map((mode) => (
           <button
             key={mode.id}
             className={`
-              flex flex-col items-center justify-center p-2 rounded-lg transition-all
+              flex flex-col items-center justify-center p-2 rounded-xl transition-all
               ${selectedMode === mode.id ? 'scale-105 shadow-md' : 'opacity-80'}
+              ${selectedMode === mode.id ? 'ai-glow' : ''}
             `}
             style={{ 
               backgroundColor: selectedMode === mode.id ? mode.color : `${mode.color}20`,
@@ -83,11 +94,19 @@ const TransportModeSelector: React.FC<TransportModeSelectorProps> = ({
               className="rounded-full p-2 mb-1" 
               style={{ backgroundColor: selectedMode === mode.id ? 'white' : `${mode.color}40` }}
             >
-              <div className={`${selectedMode === mode.id ? 'text-black' : 'text-gray-700'}`}>
+              <div 
+                style={{ color: selectedMode === mode.id ? mode.color : theme === 'dark' ? 'white' : '#333' }}
+              >
                 {mode.icon}
               </div>
             </div>
-            <span className={`text-xs font-medium ${selectedMode === mode.id ? 'text-white' : 'text-gray-700'}`}>
+            <span 
+              className={`text-xs font-medium ${
+                selectedMode === mode.id 
+                  ? 'text-white' 
+                  : theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+              }`}
+            >
               {mode.name}
             </span>
           </button>

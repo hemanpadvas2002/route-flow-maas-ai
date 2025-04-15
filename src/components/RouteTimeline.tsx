@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Bus, Train, Car, UserRound, Ship, Bike } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -119,7 +120,7 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
   };
 
   return (
-    <div className="route-timeline py-4">
+    <div className="route-timeline py-4" style={{ background: 'linear-gradient(to bottom, #1E1E2F, #2C2C3A)' }}>
       {routes.map((route) => {
         const isSelected = route.id === selectedRouteId;
         
@@ -129,21 +130,22 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
             className={`
               route-option p-4 mb-3 mx-3 rounded-xl border
               transition-all duration-300 ease-in-out
-              ${isSelected ? 'border-blue-500 shadow-md scale-[1.02]' : 'border-gray-200'}
-              ${isSelected && expanded ? 'bg-blue-50' : 'bg-white'}
+              ${isSelected ? 'border-[#00ADB5] shadow-md scale-[1.02]' : 'border-gray-700'}
+              ${isSelected ? 'bg-[#2C5364]/50' : 'maas-card'}
+              ${isSelected && expanded ? 'ai-glow' : ''}
             `}
             onClick={(e) => handleRouteClick(route, e)}
           >
             <div className="flex justify-between items-center mb-3">
               <div className="flex items-center space-x-3">
-                <div className="font-bold text-lg">
+                <div className="font-bold text-lg text-white">
                   {route.departureTime} - {route.arrivalTime}
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-300">
                   {route.totalDuration} min
                 </div>
               </div>
-              <div className="font-semibold">
+              <div className="font-semibold text-white">
                 ₹{route.totalPrice.toFixed(2)}
               </div>
             </div>
@@ -158,7 +160,7 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
                     {getIconForMode(segment.mode)}
                   </div>
                   {index < route.segments.length - 1 && (
-                    <div className="flex-grow h-0.5 bg-gray-300"></div>
+                    <div className="flex-grow h-0.5 bg-gray-600"></div>
                   )}
                 </React.Fragment>
               ))}
@@ -168,7 +170,7 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
               open={isSelected && expanded} 
               className={`mt-4 ${isSelected ? 'block' : 'hidden'}`}
             >
-              <CollapsibleContent className="space-y-4 pt-3 border-t border-gray-100">
+              <CollapsibleContent className="space-y-4 pt-3 border-t border-gray-700">
                 {route.segments.map((segment) => (
                   <div key={segment.id} className="segment-details">
                     <div className="flex items-center mb-2">
@@ -179,24 +181,24 @@ const RouteTimeline: React.FC<RouteTimelineProps> = ({
                         {getIconForMode(segment.mode)}
                       </div>
                       <div>
-                        <div className="font-medium">
+                        <div className="font-medium text-white">
                           {getModeLabel(segment.mode)}
                           {segment.routeIdentifier && ` (${segment.routeIdentifier})`}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-300">
                           {segment.duration} min · {segment.distance} km
                           {segment.price && ` · ₹${segment.price.toFixed(2)}`}
                         </div>
                       </div>
                     </div>
-                    <div className="ml-10 pl-4 border-l-2 border-gray-200">
+                    <div className="ml-10 pl-4 border-l-2 border-gray-700">
                       <div className="mb-2">
-                        <div className="text-sm text-gray-500">{segment.startTime}</div>
-                        <div className="font-medium">{segment.startLocation}</div>
+                        <div className="text-sm text-gray-400">{segment.startTime}</div>
+                        <div className="font-medium text-white">{segment.startLocation}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-500">{segment.endTime}</div>
-                        <div className="font-medium">{segment.endLocation}</div>
+                        <div className="text-sm text-gray-400">{segment.endTime}</div>
+                        <div className="font-medium text-white">{segment.endLocation}</div>
                       </div>
                     </div>
                   </div>

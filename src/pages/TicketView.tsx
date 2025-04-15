@@ -31,11 +31,11 @@ const TicketView: React.FC = () => {
 
   if (!ticket) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(to bottom, #1E1E2F, #2C2C3A, #3E3E55)' }}>
         <div className="text-center">
-          <p className="text-lg text-gray-700">No ticket found</p>
+          <p className="text-lg text-gray-300">No ticket found</p>
           <button
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
+            className="mt-4 px-4 py-2 maas-button-glow"
             onClick={() => navigate('/')}
           >
             Go Home
@@ -50,17 +50,17 @@ const TicketView: React.FC = () => {
   const transportMode = mainSegment?.mode || 'bus';
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-16">
+    <div className="min-h-screen pb-16" style={{ background: 'linear-gradient(to bottom, #1E1E2F, #2C2C3A, #3E3E55)' }}>
       {/* Header */}
-      <div className="bg-blue-600 text-white p-4">
+      <div className="p-4" style={{ background: 'linear-gradient(to right, #0F2027, #203A43, #2C5364)' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <button className="mr-2" onClick={handleBack}>
+            <button className="mr-2 text-white" onClick={handleBack}>
               <ChevronLeft className="h-6 w-6" />
             </button>
-            <h1 className="text-xl font-bold">Your Ticket</h1>
+            <h1 className="text-xl font-bold text-white">Your Ticket</h1>
           </div>
-          <button onClick={toggleShareOptions}>
+          <button onClick={toggleShareOptions} className="text-white">
             <Share2 className="h-6 w-6" />
           </button>
         </div>
@@ -84,21 +84,21 @@ const TicketView: React.FC = () => {
       
       {/* Share options */}
       {showShareOptions && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={toggleShareOptions}>
-          <div className="bg-white rounded-xl p-5 m-4 w-full max-w-md" onClick={e => e.stopPropagation()}>
-            <h3 className="text-lg font-semibold mb-4">Share Ticket</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 backdrop-blur-sm" onClick={toggleShareOptions}>
+          <div className="rounded-xl p-5 m-4 w-full max-w-md" style={{ background: 'linear-gradient(to bottom, #222831, #393E46)' }} onClick={e => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold mb-4 text-white">Share Ticket</h3>
             <div className="grid grid-cols-3 gap-4">
               {['Email', 'SMS', 'WhatsApp', 'Telegram', 'Copy Link', 'More'].map((option) => (
                 <div key={option} className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-1">
-                    <span className="text-blue-600">{option.charAt(0)}</span>
+                  <div className="w-12 h-12 rounded-full bg-[#2C5364] flex items-center justify-center mb-1 text-[#00ADB5]">
+                    <span>{option.charAt(0)}</span>
                   </div>
-                  <span className="text-sm">{option}</span>
+                  <span className="text-sm text-gray-300">{option}</span>
                 </div>
               ))}
             </div>
             <button
-              className="w-full mt-5 py-2 border border-gray-300 rounded-lg text-gray-700"
+              className="w-full mt-5 py-2 border border-gray-600 rounded-lg text-gray-300"
               onClick={toggleShareOptions}
             >
               Cancel
@@ -108,15 +108,15 @@ const TicketView: React.FC = () => {
       )}
       
       {/* Action buttons */}
-      <div className="fixed bottom-16 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-md">
+      <div className="fixed bottom-16 left-0 right-0 p-4 border-t border-gray-700 shadow-md" style={{ background: 'linear-gradient(to bottom, rgba(15, 32, 39, 0.9), rgba(32, 58, 67, 0.9))' }}>
         <button
-          className="w-full py-3 mb-3 rounded-lg border border-blue-600 text-blue-600 font-medium flex items-center justify-center"
+          className="w-full py-3 mb-3 rounded-lg border border-[#00ADB5] text-[#00ADB5] font-medium flex items-center justify-center hover:ai-glow transition-all"
         >
           <Download className="h-5 w-5 mr-2" />
           Download Ticket
         </button>
         <button
-          className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium"
+          className="w-full py-3 rounded-lg maas-button-glow"
           onClick={() => navigate('/')}
         >
           Book Another Trip
