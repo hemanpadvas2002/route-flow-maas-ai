@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -24,7 +25,9 @@ const Map: React.FC<MapProps> = ({
   const [mapboxToken, setMapboxToken] = useState<string>(
     'pk.eyJ1IjoiaGVtYW4tMDciLCJhIjoiY205aTVxbGdxMGE4ZzJqcXY5d2R0a2M3aCJ9.YCbFWOjZehRjsyQ7DyU49w'
   );
+  const [mapLoaded, setMapLoaded] = useState(false);
 
+  // Initialize the map
   useEffect(() => {
     if (!mapContainer.current || hidden) return;
     
@@ -50,9 +53,10 @@ const Map: React.FC<MapProps> = ({
       bearing: 20, // Slight rotation for better perspective
     });
 
-    // Customize the map to match our theme
-    map.current.on('load', () => {
+    // Mark the map as loaded when the style is fully loaded
+    map.current.on('style.load', () => {
       if (!map.current) return;
+      setMapLoaded(true);
       
       // Add a custom layer on top of the map with a slight gradient overlay
       map.current.addLayer({
@@ -62,7 +66,7 @@ const Map: React.FC<MapProps> = ({
           type: 'geojson',
           data: {
             type: 'Feature',
-            properties: {}, // Add the missing properties field
+            properties: {}, // Add the required properties field
             geometry: {
               type: 'Polygon',
               coordinates: [
@@ -109,12 +113,17 @@ const Map: React.FC<MapProps> = ({
     return () => {
       map.current?.remove();
       map.current = null;
+      setMapLoaded(false);
     };
   }, [mapboxToken, startLocation, hidden]);
 
-  // Update map if route changes
+  // Update map if route changes AND map style is loaded
   useEffect(() => {
-    if (!map.current || !startLocation || !endLocation || !routePoints || hidden) return;
+    if (!map.current || !mapLoaded || !startLocation || !endLocation || !routePoints || hidden) return;
+
+    // Clear existing markers if any
+    const existingMarkers = document.querySelectorAll('.mapboxgl-marker');
+    existingMarkers.forEach(marker => marker.remove());
 
     // Add markers for start and end locations
     new mapboxgl.Marker({ color: '#00ADB5' }) // AI Glow accent color for start
@@ -188,7 +197,7 @@ const Map: React.FC<MapProps> = ({
       routePoints.forEach(point => bounds.extend(point as mapboxgl.LngLatLike));
       map.current.fitBounds(bounds, { padding: 50 });
     }
-  }, [startLocation, endLocation, routePoints, hidden]);
+  }, [mapLoaded, startLocation, endLocation, routePoints, hidden]);
 
   const handleTokenInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMapboxToken(e.target.value);
