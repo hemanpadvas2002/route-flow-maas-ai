@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import RouteDetails from "./pages/RouteDetails";
+import RouteOptions from "./pages/RouteOptions";
 import NFCPayment from "./pages/NFCPayment";
 import TicketDisplay from "./pages/TicketDisplay";
 import ProfileSettings from "./pages/ProfileSettings";
@@ -23,6 +24,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/route-options" element={<RouteOptions />} />
             <Route path="/route/:routeId" element={<RouteDetails />} />
             <Route path="/payment/nfc" element={<NFCPayment />} />
             <Route path="/ticket" element={<TicketDisplay />} />

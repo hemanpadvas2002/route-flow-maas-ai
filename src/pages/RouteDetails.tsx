@@ -21,12 +21,13 @@ const routeData = {
       [80.2445, 13.0539],
       [80.2338, 13.0416]
     ] as [number, number][],
-    duration: "35 mins",
+    duration: "15 mins",
     distance: "7.2 km",
     fare: "₹25",
     nextBus: "5 mins",
     occupancy: "Medium",
-    transitMode: "bus" as const
+    transitMode: "bus" as const,
+    color: "#32CD32" // Green
   },
   "route-2": {
     id: "route-2",
@@ -43,9 +44,32 @@ const routeData = {
     duration: "20 mins",
     distance: "4.5 km",
     fare: "₹15",
-    nextBus: "2 mins",
+    nextBus: "7 mins",
     occupancy: "Low",
-    transitMode: "metro" as const
+    transitMode: "metro" as const,
+    color: "#1976D2" // Blue
+  },
+  "route-3": {
+    id: "route-3",
+    name: "Marina Beach to T. Nagar",
+    startLocation: [80.2838, 13.0500] as [number, number], // Marina Beach
+    endLocation: [80.2338, 13.0416] as [number, number], // T. Nagar
+    routePoints: [
+      [80.2838, 13.0500],
+      [80.2760, 13.0460],
+      [80.2680, 13.0420],
+      [80.2600, 13.0410],
+      [80.2520, 13.0400],
+      [80.2440, 13.0405],
+      [80.2338, 13.0416]
+    ] as [number, number][],
+    duration: "35 mins",
+    distance: "8.3 km",
+    fare: "₹30",
+    nextBus: "12 mins",
+    occupancy: "High",
+    transitMode: "bus" as const,
+    color: "#FF8C00" // Orange
   }
 };
 
@@ -63,7 +87,7 @@ const getTransitIcon = (mode: "bus" | "metro" | "walk"): LucideIcon => {
 
 const getTransitColor = (mode: "bus" | "metro" | "walk"): string => {
   switch (mode) {
-    case "bus": return "bus-icon"; // Uses the CSS class we defined
+    case "bus": return "bus-icon"; // Uses the CSS class
     case "metro": return "metro-icon";
     default: return "walking-icon";
   }
@@ -73,11 +97,15 @@ const RouteDetails: React.FC = () => {
   const { routeId } = useParams<keyof RouteDetailsParams>() as RouteDetailsParams;
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+  const [mapVisible, setMapVisible] = useState(false);
   const route = routeData[routeId as keyof typeof routeData];
 
   useEffect(() => {
     if (!route) {
       navigate('/');
+    } else {
+      // Ensure map is visible after component mounts
+      setTimeout(() => setMapVisible(true), 100);
     }
   }, [route, navigate]);
 
@@ -92,11 +120,13 @@ const RouteDetails: React.FC = () => {
     <div className="min-h-screen flex flex-col urban-dusk-gradient">
       {/* Map takes the full height */}
       <div className="w-full flex-grow">
-        <Map
-          startLocation={route.startLocation}
-          endLocation={route.endLocation}
-          routePoints={route.routePoints}
-        />
+        {mapVisible && (
+          <Map
+            startLocation={route.startLocation}
+            endLocation={route.endLocation}
+            routePoints={route.routePoints}
+          />
+        )}
       </div>
 
       {/* Route details panel */}
@@ -118,7 +148,7 @@ const RouteDetails: React.FC = () => {
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/route-options')}
             className="h-8 w-8"
           >
             <ArrowLeft className="h-4 w-4" />

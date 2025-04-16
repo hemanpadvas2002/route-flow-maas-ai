@@ -78,6 +78,19 @@ const Map: React.FC<MapProps> = ({
     }
   ];
 
+  // Cleanup function to remove markers and map
+  const cleanupMap = () => {
+    // Clean up markers
+    markers.current.forEach(marker => marker.remove());
+    markers.current = [];
+    
+    // Clean up map
+    if (map.current) {
+      map.current.remove();
+      map.current = null;
+    }
+  };
+
   useEffect(() => {
     if (map.current || !mapContainer.current) return;
 
@@ -88,19 +101,18 @@ const Map: React.FC<MapProps> = ({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/dark-v11',
       center: [80.2707, 13.0827], // Chennai coordinates
-      zoom: 10,
+      zoom: 12,
       attributionControl: false
     });
 
     // Add navigation controls
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-    // Load needed images for map markers
+    // Load needed images for map markers when map style is loaded
     map.current.on('load', () => {
-      // Load bus icon for vehicles
       if (!map.current) return;
       
-      // Check if image is already loaded to avoid console errors
+      // Load bus icon for vehicles
       map.current.loadImage(
         'https://cdn-icons-png.flaticon.com/512/5006/5006390.png',
         (error, image) => {
@@ -127,17 +139,7 @@ const Map: React.FC<MapProps> = ({
       setMapLoaded(true);
     });
 
-    return () => {
-      // Clean up markers
-      markers.current.forEach(marker => marker.remove());
-      markers.current = [];
-      
-      // Clean up map
-      if (map.current) {
-        map.current.remove();
-        map.current = null;
-      }
-    };
+    return cleanupMap;
   }, []);
 
   // Effect to handle all map operations once the map and style are loaded
@@ -167,6 +169,8 @@ const Map: React.FC<MapProps> = ({
 
   // Function to update map markers
   const updateMapMarkers = () => {
+    if (!map.current) return;
+    
     // Clear existing markers
     markers.current.forEach(marker => marker.remove());
     markers.current = [];
@@ -175,7 +179,7 @@ const Map: React.FC<MapProps> = ({
     if (startLocation) {
       const startMarker = new mapboxgl.Marker({ color: '#00ff00' })
         .setLngLat(startLocation)
-        .addTo(map.current!);
+        .addTo(map.current);
       markers.current.push(startMarker);
     }
 
@@ -183,7 +187,7 @@ const Map: React.FC<MapProps> = ({
     if (endLocation) {
       const endMarker = new mapboxgl.Marker({ color: '#ff0000' })
         .setLngLat(endLocation)
-        .addTo(map.current!);
+        .addTo(map.current);
       markers.current.push(endMarker);
     }
 
@@ -199,7 +203,7 @@ const Map: React.FC<MapProps> = ({
 
   // Function to add route to map
   const addRouteToMap = (points: [number, number][]) => {
-    if (!map.current || !mapLoaded) return;
+    if (!map.current || !mapLoaded || points.length < 2) return;
     
     // Create a GeoJSON object for the route
     const routeData: Feature<Geometry, GeoJsonProperties> = {
@@ -213,33 +217,41 @@ const Map: React.FC<MapProps> = ({
 
     // Add or update the route source
     if (!sourceAdded.current) {
-      map.current.addSource('route', {
-        type: 'geojson',
-        data: routeData
-      });
-      
-      // Add route layer
-      map.current.addLayer({
-        id: 'route',
-        type: 'line',
-        source: 'route',
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round'
-        },
-        paint: {
-          'line-color': '#3887be',
-          'line-width': 5,
-          'line-opacity': 0.75
-        }
-      });
-      
-      sourceAdded.current = true;
+      try {
+        map.current.addSource('route', {
+          type: 'geojson',
+          data: routeData
+        });
+        
+        // Add route layer
+        map.current.addLayer({
+          id: 'route',
+          type: 'line',
+          source: 'route',
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          paint: {
+            'line-color': '#3887be',
+            'line-width': 5,
+            'line-opacity': 0.75
+          }
+        });
+        
+        sourceAdded.current = true;
+      } catch (error) {
+        console.error("Error adding route source or layer:", error);
+      }
     } else {
       // Update existing source
-      const source = map.current.getSource('route') as mapboxgl.GeoJSONSource;
-      if (source && source.setData) {
-        source.setData(routeData);
+      try {
+        const source = map.current.getSource('route') as mapboxgl.GeoJSONSource;
+        if (source && typeof source.setData === 'function') {
+          source.setData(routeData);
+        }
+      } catch (error) {
+        console.error("Error updating route source:", error);
       }
     }
   };
@@ -248,99 +260,113 @@ const Map: React.FC<MapProps> = ({
   const addVehiclesToMap = () => {
     if (!map.current || !mapLoaded) return;
 
-    // Create GeoJSON for vehicles
-    const vehicleFeatures: Feature<Geometry, GeoJsonProperties>[] = vehicles.map(vehicle => ({
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: vehicle.coordinates
-      },
-      properties: {
-        id: vehicle.id,
-        status: vehicle.status,
-        occupancy: vehicle.occupancy,
-        heading: vehicle.heading
-      }
-    }));
+    try {
+      // Check if source already exists
+      if (map.current.getSource('vehicles')) return;
+      
+      // Create GeoJSON for vehicles
+      const vehicleFeatures: Feature<Geometry, GeoJsonProperties>[] = vehicles.map(vehicle => ({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: vehicle.coordinates
+        },
+        properties: {
+          id: vehicle.id,
+          status: vehicle.status,
+          occupancy: vehicle.occupancy,
+          heading: vehicle.heading
+        }
+      }));
 
-    // Add vehicles source
-    map.current.addSource('vehicles', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: vehicleFeatures
-      } as FeatureCollection
-    });
+      // Add vehicles source
+      map.current.addSource('vehicles', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: vehicleFeatures
+        } as FeatureCollection
+      });
 
-    // Add vehicle layer
-    map.current.addLayer({
-      id: 'vehicles',
-      type: 'symbol',
-      source: 'vehicles',
-      layout: {
-        'icon-image': 'bus',
-        'icon-size': 0.05,
-        'icon-allow-overlap': true,
-        'icon-rotate': ['get', 'heading'],
-        'text-field': ['concat', ['get', 'id'], '\n', ['get', 'status']],
-        'text-font': ['Open Sans Bold'],
-        'text-offset': [0, 1.2],
-        'text-anchor': 'top'
-      },
-      paint: {
-        'text-color': '#ffffff',
-        'text-halo-color': '#000000',
-        'text-halo-width': 1
-      }
-    });
+      // Add vehicle layer
+      map.current.addLayer({
+        id: 'vehicles',
+        type: 'symbol',
+        source: 'vehicles',
+        layout: {
+          'icon-image': 'bus',
+          'icon-size': 0.05,
+          'icon-allow-overlap': true,
+          'icon-rotate': ['get', 'heading'],
+          'text-field': ['concat', ['get', 'id'], '\n', ['get', 'status']],
+          'text-font': ['Open Sans Bold'],
+          'text-offset': [0, 1.2],
+          'text-anchor': 'top'
+        },
+        paint: {
+          'text-color': '#ffffff',
+          'text-halo-color': '#000000',
+          'text-halo-width': 1
+        }
+      });
+    } catch (error) {
+      console.error("Error adding vehicles to map:", error);
+    }
   };
 
   // Function to add stations to map
   const addStationsToMap = () => {
     if (!map.current || !mapLoaded) return;
 
-    // Create GeoJSON for stations
-    const stationFeatures: Feature<Geometry, GeoJsonProperties>[] = stations.map(station => ({
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: station.coordinates
-      },
-      properties: {
-        id: station.id,
-        name: station.name
-      }
-    }));
+    try {
+      // Check if source already exists
+      if (map.current.getSource('stations')) return;
+      
+      // Create GeoJSON for stations
+      const stationFeatures: Feature<Geometry, GeoJsonProperties>[] = stations.map(station => ({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: station.coordinates
+        },
+        properties: {
+          id: station.id,
+          name: station.name
+        }
+      }));
 
-    // Add stations source
-    map.current.addSource('stations', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: stationFeatures
-      } as FeatureCollection
-    });
+      // Add stations source
+      map.current.addSource('stations', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: stationFeatures
+        } as FeatureCollection
+      });
 
-    // Add station layer
-    map.current.addLayer({
-      id: 'stations',
-      type: 'symbol',
-      source: 'stations',
-      layout: {
-        'icon-image': 'bus-stop',
-        'icon-size': 0.05,
-        'icon-allow-overlap': true,
-        'text-field': ['get', 'name'],
-        'text-font': ['Open Sans Bold'],
-        'text-offset': [0, 1.2],
-        'text-anchor': 'top'
-      },
-      paint: {
-        'text-color': '#ffffff',
-        'text-halo-color': '#000000',
-        'text-halo-width': 1
-      }
-    });
+      // Add station layer
+      map.current.addLayer({
+        id: 'stations',
+        type: 'symbol',
+        source: 'stations',
+        layout: {
+          'icon-image': 'bus-stop',
+          'icon-size': 0.05,
+          'icon-allow-overlap': true,
+          'text-field': ['get', 'name'],
+          'text-font': ['Open Sans Bold'],
+          'text-offset': [0, 1.2],
+          'text-anchor': 'top'
+        },
+        paint: {
+          'text-color': '#ffffff',
+          'text-halo-color': '#000000',
+          'text-halo-width': 1
+        }
+      });
+    } catch (error) {
+      console.error("Error adding stations to map:", error);
+    }
   };
 
   return (
