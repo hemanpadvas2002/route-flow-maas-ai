@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Clock, Users, LocateFixed } from "lucide-react";
+import { ArrowLeft, Clock, Users, LocateFixed, CreditCard, Bus, Train, LucideIcon } from "lucide-react";
 import Map from '@/components/Map';
 
 // Sample route data
@@ -25,7 +25,8 @@ const routeData = {
     distance: "7.2 km",
     fare: "₹25",
     nextBus: "5 mins",
-    occupancy: "Medium"
+    occupancy: "Medium",
+    transitMode: "bus" as const
   },
   "route-2": {
     id: "route-2",
@@ -43,13 +44,30 @@ const routeData = {
     distance: "4.5 km",
     fare: "₹15",
     nextBus: "2 mins",
-    occupancy: "Low"
+    occupancy: "Low",
+    transitMode: "metro" as const
   }
 };
 
 interface RouteDetailsParams {
   routeId: string;
 }
+
+const getTransitIcon = (mode: "bus" | "metro" | "walk"): LucideIcon => {
+  switch (mode) {
+    case "bus": return Bus;
+    case "metro": return Train;
+    default: return Bus;
+  }
+};
+
+const getTransitColor = (mode: "bus" | "metro" | "walk"): string => {
+  switch (mode) {
+    case "bus": return "bus-icon"; // Uses the CSS class we defined
+    case "metro": return "metro-icon";
+    default: return "walking-icon";
+  }
+};
 
 const RouteDetails: React.FC = () => {
   const { routeId } = useParams<keyof RouteDetailsParams>() as RouteDetailsParams;
@@ -67,8 +85,11 @@ const RouteDetails: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  const TransitIcon = getTransitIcon(route.transitMode);
+  const transitColorClass = getTransitColor(route.transitMode);
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col urban-dusk-gradient">
       {/* Map takes the full height */}
       <div className="w-full flex-grow">
         <Map
@@ -80,7 +101,7 @@ const RouteDetails: React.FC = () => {
 
       {/* Route details panel */}
       <div className={`
-        fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl shadow-lg
+        fixed bottom-0 left-0 right-0 bg-card text-card-foreground rounded-t-2xl shadow-lg
         transition-transform duration-300 ease-in-out transform z-10
         ${collapsed ? 'translate-y-[calc(100%-3.5rem)]' : ''}
       `}>
@@ -89,7 +110,7 @@ const RouteDetails: React.FC = () => {
           className="h-6 w-full flex justify-center items-center cursor-pointer"
           onClick={() => setCollapsed(!collapsed)}
         >
-          <div className="w-12 h-1 bg-gray-300 dark:bg-gray-600 rounded-full my-2"></div>
+          <div className="w-12 h-1 bg-muted rounded-full my-2"></div>
         </div>
 
         {/* Header with back button */}
@@ -135,15 +156,25 @@ const RouteDetails: React.FC = () => {
 
           <Card>
             <CardHeader className="p-3 pb-1">
-              <CardTitle className="text-sm">Next Bus</CardTitle>
+              <div className="flex items-center">
+                <TransitIcon className={`h-5 w-5 mr-2 ${transitColorClass}`} />
+                <CardTitle className="text-sm">Next {route.transitMode === "bus" ? "Bus" : "Train"}</CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="p-3 pt-0">
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <div>
                   <p className="font-semibold">Arrives in {route.nextBus}</p>
                   <p className="text-xs text-muted-foreground">Fare: {route.fare}</p>
                 </div>
-                <Button size="sm" className="self-center">Track</Button>
+                <Button 
+                  size="sm" 
+                  className="self-center mobility-blue-gradient hover:opacity-90"
+                  onClick={() => navigate('/payment/nfc')}
+                >
+                  <CreditCard className="h-4 w-4 mr-1" />
+                  Book
+                </Button>
               </div>
             </CardContent>
           </Card>

@@ -1,20 +1,38 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bus, MapPin, Navigation } from "lucide-react";
+import { Bus, MapPin, Navigation, CreditCard, User } from "lucide-react";
 import Map from '@/components/Map';
 
 const Index = () => {
+  const navigate = useNavigate();
+  
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col urban-dusk-gradient">
       {/* Map background */}
       <div className="w-full h-[65vh]">
         <Map 
           startLocation={[80.2707, 13.0827]} // Chennai Central
           endLocation={[80.2338, 13.0416]}   // T. Nagar
         />
+      </div>
+      
+      {/* Navigation Bar */}
+      <div className="fixed top-0 left-0 right-0 p-4 flex justify-between z-10">
+        <div>
+          <h1 className="text-white text-xl font-bold tracking-tight">ARGO Transit</h1>
+          <p className="text-white/70 text-sm">Chennai</p>
+        </div>
+        <Button 
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/profile')}
+          className="bg-black/30 backdrop-blur-sm rounded-full text-white hover:bg-black/40"
+        >
+          <User className="h-5 w-5" />
+        </Button>
       </div>
       
       {/* Content overlay */}
@@ -27,7 +45,7 @@ const Index = () => {
             {/* Popular routes */}
             <div>
               <h3 className="font-medium mb-3 flex items-center">
-                <Bus className="mr-2 h-5 w-5 text-primary" />
+                <Bus className="mr-2 h-5 w-5 bus-icon" />
                 Popular Routes
               </h3>
               <div className="grid grid-cols-1 gap-3">
@@ -74,6 +92,17 @@ const Index = () => {
                   </Button>
                 ))}
               </div>
+            </div>
+            
+            {/* Quick Actions */}
+            <div className="mt-6">
+              <Button 
+                className="w-full mobility-blue-gradient text-white py-6 h-auto"
+                onClick={() => navigate('/payment/nfc')}
+              >
+                <CreditCard className="mr-2 h-5 w-5" />
+                Book Ticket
+              </Button>
             </div>
           </CardContent>
         </Card>

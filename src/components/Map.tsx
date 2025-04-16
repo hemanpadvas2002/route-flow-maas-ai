@@ -82,21 +82,48 @@ const Map: React.FC<MapProps> = ({
     if (map.current || !mapContainer.current) return;
 
     // Initialize map with correct token
-    // Note: Using a placeholder token reference here - in a real app, use environment variables
-    mapboxgl.accessToken = 'pk.eyJ1IjoiaGVtYW4tMDciLCJhIjoiY2xuY3E0ZWl0MDlrejJrcXZ2em44OTQyaCJ9.5dJrr0KcvXS39vVLqPjKRg';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaGVtYW4tMDciLCJhIjoiY205aTVxbGdxMGE4ZzJqcXY5d2R0a2M3aCJ9.YCbFWOjZehRjsyQ7DyU49w';
     
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/dark-v11',
       center: [80.2707, 13.0827], // Chennai coordinates
-      zoom: 10
+      zoom: 10,
+      attributionControl: false
     });
 
     // Add navigation controls
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-    // Listen for style.load event to ensure map is ready
-    map.current.on('style.load', () => {
+    // Load needed images for map markers
+    map.current.on('load', () => {
+      // Load bus icon for vehicles
+      if (!map.current) return;
+      
+      // Check if image is already loaded to avoid console errors
+      map.current.loadImage(
+        'https://cdn-icons-png.flaticon.com/512/5006/5006390.png',
+        (error, image) => {
+          if (error || !image || !map.current) return;
+          
+          if (!map.current.hasImage('bus')) {
+            map.current.addImage('bus', image);
+          }
+        }
+      );
+      
+      // Load bus stop icon for stations
+      map.current.loadImage(
+        'https://cdn-icons-png.flaticon.com/512/2916/2916169.png',
+        (error, image) => {
+          if (error || !image || !map.current) return;
+          
+          if (!map.current.hasImage('bus-stop')) {
+            map.current.addImage('bus-stop', image);
+          }
+        }
+      );
+      
       setMapLoaded(true);
     });
 
@@ -252,7 +279,7 @@ const Map: React.FC<MapProps> = ({
       source: 'vehicles',
       layout: {
         'icon-image': 'bus',
-        'icon-size': 1.2,
+        'icon-size': 0.05,
         'icon-allow-overlap': true,
         'icon-rotate': ['get', 'heading'],
         'text-field': ['concat', ['get', 'id'], '\n', ['get', 'status']],
@@ -301,7 +328,7 @@ const Map: React.FC<MapProps> = ({
       source: 'stations',
       layout: {
         'icon-image': 'bus-stop',
-        'icon-size': 1.2,
+        'icon-size': 0.05,
         'icon-allow-overlap': true,
         'text-field': ['get', 'name'],
         'text-font': ['Open Sans Bold'],

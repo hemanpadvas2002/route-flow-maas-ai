@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,56 +36,60 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Transport mode colors */
+    --color-bus: 35 100% 50%;
+    --color-metro: 211 80% 51%;
+    --color-walking: 0 0% 74%;
+    
+    /* NFC interaction colors */
+    --nfc-gradient-from: 220 20% 16%;
+    --nfc-gradient-to: 217 13% 27%;
+    --nfc-accent: 183 100% 35%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 230 17% 15%;
+    --foreground: 0 0% 96%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 230 18% 20%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 230 18% 20%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 210 40% 98%;
+    --primary: 0 0% 96%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 230 16% 25%;
+    --secondary-foreground: 0 0% 96%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 230 16% 25%;
+    --muted-foreground: 0 0% 80%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 230 16% 25%;
+    --accent-foreground: 0 0% 96%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --border: 230 16% 25%;
+    --input: 230 16% 25%;
     --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    
+    --sidebar-background: 230 17% 15%;
+    --sidebar-foreground: 0 0% 96%;
+    --sidebar-primary: 217 91.2% 59.8%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 0 0% 96%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
@@ -96,6 +101,34 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-colors duration-300;
+  }
+  
+  .mobility-blue-gradient {
+    @apply bg-gradient-to-r from-[#0F2027] via-[#203A43] to-[#2C5364];
+  }
+  
+  .urban-dusk-gradient {
+    @apply bg-gradient-to-br from-[#1E1E2F] via-[#2C2C3A] to-[#3E3E55];
+  }
+  
+  .nfc-glow-gradient {
+    @apply bg-gradient-to-r from-[#222831] to-[#393E46];
+  }
+  
+  .nfc-glow-accent {
+    @apply text-[#00ADB5] shadow-[0_0_15px_rgba(0,173,181,0.7)];
+  }
+  
+  .bus-icon {
+    @apply text-[#FFA500];
+  }
+  
+  .metro-icon {
+    @apply text-[#1E88E5];
+  }
+  
+  .walking-icon {
+    @apply text-[#BDBDBD];
   }
 }
