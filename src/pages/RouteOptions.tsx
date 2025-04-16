@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from "@/components/ui/card";
-import { Search, Navigation } from "lucide-react";
+import { Search, Navigation, MapPin } from "lucide-react";
 import Map from '@/components/Map';
 
 // Updated route options data with real Chennai locations
@@ -56,7 +56,7 @@ const routeOptions = [
 // Popular Chennai locations for search suggestions
 const popularPlaces = [
   "Chennai Central",
-  "T. Nagar",
+  "T. Nagar Bus Depot",
   "Marina Beach",
   "Anna Nagar",
   "Velachery",
@@ -64,7 +64,7 @@ const popularPlaces = [
   "Adyar", 
   "Vadapalani",
   "Koyambedu",
-  "Chennai Airport"
+  "Chennai Airport Metro"
 ];
 
 const RouteOptions = () => {

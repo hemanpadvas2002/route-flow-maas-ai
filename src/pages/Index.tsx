@@ -1,47 +1,58 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bus, MapPin, Navigation, CreditCard, User, Search } from "lucide-react";
+import { User, Search } from "lucide-react";
 import Map from '@/components/Map';
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
+import { MapPin } from "lucide-react";
+
+// Popular Chennai locations for search suggestions
+const popularPlaces = [
+  "Chennai Central",
+  "T. Nagar Bus Depot",
+  "Marina Beach",
+  "Anna Nagar",
+  "Velachery",
+  "Guindy",
+  "Adyar", 
+  "Vadapalani",
+  "Koyambedu",
+  "Chennai Airport Metro"
+];
 
 const Index = () => {
   const navigate = useNavigate();
   const [destination, setDestination] = useState('');
+  const [origin, setOrigin] = useState('Chennai Central');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [activeInput, setActiveInput] = useState<'origin' | 'destination' | null>(null);
   
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (destination.trim()) {
+  const handleSearch = () => {
+    if (origin.trim() && destination.trim()) {
       navigate('/route-options');
     }
+  };
+
+  const handlePlaceSelect = (place: string) => {
+    if (activeInput === 'origin') {
+      setOrigin(place);
+    } else if (activeInput === 'destination') {
+      setDestination(place);
+    }
+    setActiveInput(null);
   };
   
   return (
     <div className="min-h-screen flex flex-col urban-dusk-gradient">
       {/* Map background */}
-      <div className="w-full h-[65vh]">
+      <div className="w-full h-screen">
         <Map 
           startLocation={[80.2707, 13.0827]} // Chennai Central
-          endLocation={[80.2338, 13.0416]}   // T. Nagar
+          endLocation={destination ? [80.2338, 13.0416] : undefined}   // T. Nagar
+          attributionControl={false} // Remove Mapbox watermark
         />
-      </div>
-      
-      {/* Search Bar */}
-      <div className="absolute bottom-20 left-0 right-0 px-4">
-        <form onSubmit={handleSearch} className="bg-white dark:bg-gray-800 rounded-full flex items-center px-4 py-2 shadow-lg">
-          <Search className="h-5 w-5 text-gray-400 dark:text-gray-500" />
-          <input
-            type="text"
-            placeholder="Where to?"
-            className="flex-1 bg-transparent border-none outline-none px-2 text-black dark:text-white"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-          />
-          <button type="submit" className="p-1.5 bg-blue-500 rounded-full">
-            <Navigation className="h-4 w-4 text-white" />
-          </button>
-        </form>
       </div>
       
       {/* Navigation Bar */}
@@ -60,26 +71,78 @@ const Index = () => {
         </Button>
       </div>
       
-      {/* Content overlay */}
-      <div className="container px-4 py-6 -mt-16">
-        <Card className="shadow-xl border-none">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xl text-center">ARGO Chennai</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Quick Actions */}
-            <div className="mt-6">
-              <Button 
-                className="w-full mobility-blue-gradient text-white py-6 h-auto"
-                onClick={() => navigate('/route-options')}
+      {/* "Where To?" Button */}
+      <Sheet>
+        <SheetTrigger asChild>
+          <div className="absolute bottom-20 left-0 right-0 px-4">
+            <Button 
+              className="w-full bg-white dark:bg-gray-800 text-black dark:text-white shadow-lg rounded-full flex items-center justify-start px-4 h-12"
+            >
+              <Search className="h-5 w-5 text-gray-400 dark:text-gray-500 mr-2" />
+              <span>Where to?</span>
+            </Button>
+          </div>
+        </SheetTrigger>
+        <SheetContent side="bottom" className="h-[80vh] rounded-t-2xl p-0">
+          <div className="p-4 space-y-4">
+            <div className="space-y-2">
+              <div 
+                className="flex items-center p-3 bg-gray-100 dark:bg-gray-800 rounded-lg"
+                onClick={() => setActiveInput('origin')}
               >
-                <CreditCard className="mr-2 h-5 w-5" />
-                Find Routes
-              </Button>
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <Input 
+                  placeholder="From" 
+                  value={origin}
+                  onChange={(e) => setOrigin(e.target.value)}
+                  className="border-none bg-transparent p-0 focus-visible:ring-0"
+                  onFocus={() => setActiveInput('origin')}
+                />
+              </div>
+              
+              <div 
+                className="flex items-center p-3 bg-gray-100 dark:bg-gray-800 rounded-lg"
+                onClick={() => setActiveInput('destination')}
+              >
+                <div className="w-2 h-2 bg-red-500 rounded-full mr-3"></div>
+                <Input 
+                  placeholder="To" 
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  className="border-none bg-transparent p-0 focus-visible:ring-0"
+                  onFocus={() => setActiveInput('destination')}
+                />
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            
+            <Button 
+              className="w-full mobility-blue-gradient text-white"
+              onClick={handleSearch}
+            >
+              Find Routes
+            </Button>
+            
+            {/* Popular places */}
+            {activeInput && (
+              <div className="mt-4">
+                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Popular Places</h3>
+                <div className="space-y-2">
+                  {popularPlaces.map((place) => (
+                    <button
+                      key={place}
+                      className="w-full text-left p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg flex items-center"
+                      onClick={() => handlePlaceSelect(place)}
+                    >
+                      <MapPin className="h-4 w-4 mr-2 text-gray-500" />
+                      {place}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };

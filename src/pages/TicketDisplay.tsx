@@ -1,161 +1,168 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Bus, Clock, MapPin, Download, Share2, QrCode } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, Bus, Train, CalendarClock, MapPin, QrCode, Share2 } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 
-const generateQRCode = () => {
-  // This would typically use a library like qrcode.react
-  return (
-    <div className="bg-white p-4 rounded-lg">
-      <div className="grid grid-cols-5 grid-rows-5 gap-1 w-48 h-48">
-        {/* Simplified QR Code for visualization */}
-        {Array.from({ length: 25 }).map((_, i) => (
-          <div 
-            key={i} 
-            className={`${Math.random() > 0.7 ? 'bg-black' : 'bg-white'} 
-                      ${i === 0 || i === 4 || i === 20 || i === 24 ? 'border-2 border-black bg-white' : ''}`}
-          ></div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const TicketDisplay: React.FC = () => {
+const TicketDisplay = () => {
   const navigate = useNavigate();
-  const [remainingTime, setRemainingTime] = useState(3600); // 1 hour in seconds
-  const qrRef = useRef<HTMLDivElement>(null);
+  const [isQRVisible, setIsQRVisible] = useState(false);
   
+  // Simulate a random route selection for demonstration
+  const routeTypes = ["bus", "metro"];
+  const [routeType] = useState(routeTypes[Math.floor(Math.random() * routeTypes.length)]);
+  
+  // Sample ticket data
+  const ticketData = {
+    routeName: routeType === "bus" ? "5C Chennai Central to T. Nagar" : "M1 Chennai Central to Vadapalani",
+    date: new Date().toLocaleDateString('en-IN', { 
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }),
+    time: new Date().toLocaleTimeString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit'
+    }),
+    from: "Chennai Central",
+    to: routeType === "bus" ? "T. Nagar" : "Vadapalani",
+    fare: routeType === "bus" ? "₹25" : "₹15",
+    ticketId: "ARGO-" + Math.floor(Math.random() * 1000000).toString().padStart(6, '0'),
+  };
+  
+  // Show QR code with animation after component mounts
   useEffect(() => {
-    // Countdown timer for ticket validity
-    const timer = setInterval(() => {
-      setRemainingTime(prev => {
-        if (prev <= 0) return 0;
-        return prev - 1;
-      });
-    }, 1000);
+    const timer = setTimeout(() => {
+      setIsQRVisible(true);
+    }, 500);
     
-    return () => clearInterval(timer);
+    return () => clearTimeout(timer);
   }, []);
   
-  // Format remaining time as HH:MM:SS
-  const formatTime = (seconds: number) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
+  const TransitIcon = routeType === "bus" ? Bus : Train;
+  
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1E1E2F] to-[#3E3E55] text-white">
+    <div className="min-h-screen urban-dusk-gradient flex flex-col">
       {/* Header */}
-      <header className="p-4 flex items-center justify-between">
+      <div className="p-4 flex items-center">
         <Button 
           variant="ghost" 
-          size="icon" 
+          size="icon"
           onClick={() => navigate('/')}
-          className="text-white hover:bg-white/10"
+          className="text-white"
         >
-          <ArrowLeft className="h-6 w-6" />
+          <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h1 className="text-xl font-semibold">Your Ticket</h1>
-        <div className="w-6"></div> {/* Spacer for centering */}
-      </header>
+        <h1 className="text-xl font-bold text-white ml-2">E-Ticket</h1>
+      </div>
 
-      {/* Ticket card */}
-      <div className="px-4 py-6">
-        <Card className="bg-gradient-to-b from-gray-900 to-gray-800 border-none overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 h-2"></div>
+      {/* Ticket content */}
+      <div className="flex-1 flex flex-col items-center justify-center p-4">
+        <Card className="w-full max-w-md border-0 shadow-xl overflow-hidden">
+          <div className="h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+          
+          <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4">
+            <div className="flex items-center">
+              <TransitIcon className={`mr-2 h-5 w-5 ${routeType === "bus" ? "bus-icon" : "metro-icon"}`} />
+              <CardTitle className="text-lg">ARGO {routeType === "bus" ? "Bus" : "Metro"}</CardTitle>
+            </div>
+            <div className="text-right">
+              <p className="text-xs opacity-70">Ticket ID</p>
+              <p className="text-sm font-mono">{ticketData.ticketId}</p>
+            </div>
+          </CardHeader>
+          
           <CardContent className="p-0">
-            {/* QR code section */}
-            <div className="flex flex-col items-center py-8 border-b border-gray-700" ref={qrRef}>
-              <div className="relative">
-                {generateQRCode()}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white rounded-full p-1">
-                    <Bus className="h-6 w-6 text-blue-600" />
+            {/* Ticket details */}
+            <div className="p-4 space-y-4">
+              <div className="text-center">
+                <h2 className="font-semibold text-xl">{ticketData.routeName}</h2>
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <CalendarClock className="h-4 w-4 mr-1 opacity-60" />
+                  <span className="text-sm">{ticketData.date}</span>
+                </div>
+                <div className="text-sm font-medium">{ticketData.time}</div>
+              </div>
+              
+              <div className="flex justify-between items-start pt-2 pb-2 border-t border-b border-gray-200 dark:border-gray-700">
+                <div className="space-y-2">
+                  <div>
+                    <p className="text-xs opacity-60">From</p>
+                    <div className="flex items-center">
+                      <MapPin className="h-4 w-4 mr-1 text-green-500" />
+                      <p className="font-medium">{ticketData.from}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="border-l border-gray-200 dark:border-gray-700 h-12 mx-4"></div>
+                
+                <div className="space-y-2">
+                  <div>
+                    <p className="text-xs opacity-60">To</p>
+                    <div className="flex items-center">
+                      <MapPin className="h-4 w-4 mr-1 text-red-500" />
+                      <p className="font-medium">{ticketData.to}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <p className="mt-4 text-sm text-gray-300">Scan to validate</p>
+              
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-xs opacity-60">Fare</p>
+                  <p className="font-bold text-lg">{ticketData.fare}</p>
+                </div>
+                
+                <div>
+                  <p className="text-xs opacity-60">Status</p>
+                  <div className="flex items-center">
+                    <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>
+                    <span className="font-medium text-green-500">Confirmed</span>
+                  </div>
+                </div>
+              </div>
             </div>
             
-            {/* Ticket details */}
-            <div className="p-6 space-y-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-gray-400 text-xs">Ticket Type</p>
-                  <p className="font-semibold">Single Journey - Bus</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-gray-400 text-xs">Price</p>
-                  <p className="font-semibold">₹30.00</p>
-                </div>
+            {/* QR Code Section */}
+            <div className={`p-4 flex flex-col items-center space-y-3 transition-all duration-500 ${isQRVisible ? 'opacity-100' : 'opacity-0'}`}>
+              <div className="bg-white p-2 rounded-lg">
+                <QrCode className="h-40 w-40 p-1 text-black" />
               </div>
+              <p className="text-xs text-center opacity-70">
+                Show this QR code to the conductor <br/> or scan at the terminal
+              </p>
+            </div>
+            
+            {/* Actions */}
+            <div className="flex space-x-2 p-4 bg-gray-50 dark:bg-gray-800/50">
+              <Button className="flex-1" variant="outline">
+                <Share2 className="h-4 w-4 mr-2" />
+                Share
+              </Button>
               
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-gray-400 text-xs">Route</p>
-                  <div className="flex items-center">
-                    <Bus className="h-4 w-4 mr-1 text-amber-500" />
-                    <p className="font-semibold">292 - Des Érables</p>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button className="flex-1 mobility-blue-gradient text-white">
+                    <QrCode className="h-4 w-4 mr-2" />
+                    Show QR
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-fit p-0 bg-white">
+                  <div className="p-2">
+                    <QrCode className="h-64 w-64 p-2 text-black" />
                   </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-gray-400 text-xs">Valid until</p>
-                  <div className="flex items-center justify-end">
-                    <Clock className="h-4 w-4 mr-1 text-blue-400" />
-                    <p className="font-semibold text-blue-400">{formatTime(remainingTime)}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-1">
-                <p className="text-gray-400 text-xs">Journey</p>
-                <div className="flex items-start">
-                  <MapPin className="h-5 w-5 mr-2 mt-0.5 text-green-500" />
-                  <div>
-                    <p className="font-semibold">Des Érables</p>
-                    <p className="text-xs text-gray-400">Starting point</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <MapPin className="h-5 w-5 mr-2 mt-0.5 text-red-500" />
-                  <div>
-                    <p className="font-semibold">Saint-Augustin</p>
-                    <p className="text-xs text-gray-400">Destination</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center pt-2">
-                <p className="text-xs text-gray-400">Ticket #ARG0-2025-04016-292</p>
-                <p className="text-xs text-gray-400">16 April 2025</p>
-              </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Action buttons */}
-      <div className="px-4 py-6 flex justify-center space-x-4">
-        <Button variant="outline" className="flex-1 py-6 h-auto border-white/20 bg-white/5 backdrop-blur-sm text-white hover:bg-white/10">
-          <Download className="h-5 w-5 mr-2" />
-          Save
-        </Button>
-        <Button variant="outline" className="flex-1 py-6 h-auto border-white/20 bg-white/5 backdrop-blur-sm text-white hover:bg-white/10">
-          <Share2 className="h-5 w-5 mr-2" />
-          Share
-        </Button>
-      </div>
-
-      {/* Help text */}
-      <div className="px-6 py-4 text-center">
-        <p className="text-sm text-gray-400">
-          Show this ticket to the driver or scan at station gates
-        </p>
       </div>
     </div>
   );

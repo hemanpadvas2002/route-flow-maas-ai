@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Clock, Users, LocateFixed, CreditCard, Bus, Train, LucideIcon } from "lucide-react";
+import { ArrowLeft, Clock, Users, LocateFixed, CreditCard, Bus, Train } from "lucide-react";
 import Map from '@/components/Map';
+import { toast } from "@/components/ui/sonner";
 
 // Sample route data with Chennai locations
 const routeData = {
@@ -98,22 +99,6 @@ interface RouteDetailsParams {
   routeId: string;
 }
 
-const getTransitIcon = (mode: "bus" | "metro" | "walk"): LucideIcon => {
-  switch (mode) {
-    case "bus": return Bus;
-    case "metro": return Train;
-    default: return Bus;
-  }
-};
-
-const getTransitColor = (mode: "bus" | "metro" | "walk"): string => {
-  switch (mode) {
-    case "bus": return "bus-icon"; // Uses the CSS class
-    case "metro": return "metro-icon";
-    default: return "walking-icon";
-  }
-};
-
 const RouteDetails: React.FC = () => {
   const { routeId } = useParams<keyof RouteDetailsParams>() as RouteDetailsParams;
   const navigate = useNavigate();
@@ -124,18 +109,29 @@ const RouteDetails: React.FC = () => {
   useEffect(() => {
     if (!route) {
       navigate('/route-options');
-    } else {
-      // Ensure map is visible after component mounts
-      setTimeout(() => setMapVisible(true), 100);
+      return;
     }
+    
+    // Ensure map is visible after component mounts
+    const timer = setTimeout(() => setMapVisible(true), 100);
+    
+    return () => clearTimeout(timer);
   }, [route, navigate]);
 
   if (!route) {
-    return <div>Loading...</div>;
+    return <div className="min-h-screen urban-dusk-gradient flex items-center justify-center">Loading...</div>;
   }
 
-  const TransitIcon = getTransitIcon(route.transitMode);
-  const transitColorClass = getTransitColor(route.transitMode);
+  const handleBooking = () => {
+    toast.success("Route booked successfully!");
+    navigate('/payment/nfc');
+  };
+
+  const getTransitIcon = () => {
+    return route.transitMode === "bus" ? Bus : Train;
+  };
+
+  const TransitIcon = getTransitIcon();
 
   return (
     <div className="min-h-screen flex flex-col urban-dusk-gradient">
@@ -209,7 +205,7 @@ const RouteDetails: React.FC = () => {
           <Card>
             <CardHeader className="p-3 pb-1">
               <div className="flex items-center">
-                <TransitIcon className={`h-5 w-5 mr-2 ${transitColorClass}`} />
+                <TransitIcon className={`h-5 w-5 mr-2 ${route.transitMode === "bus" ? "bus-icon" : "metro-icon"}`} />
                 <CardTitle className="text-sm">Next {route.transitMode === "bus" ? "Bus" : "Train"}</CardTitle>
               </div>
             </CardHeader>
@@ -222,7 +218,7 @@ const RouteDetails: React.FC = () => {
                 <Button 
                   size="sm" 
                   className="self-center mobility-blue-gradient hover:opacity-90"
-                  onClick={() => navigate('/payment/nfc')}
+                  onClick={handleBooking}
                 >
                   <CreditCard className="h-4 w-4 mr-1" />
                   Book
