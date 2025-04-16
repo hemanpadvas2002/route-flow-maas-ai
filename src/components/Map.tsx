@@ -175,14 +175,14 @@ const Map: React.FC<MapProps> = ({
     if (!map.current || !mapLoaded) return;
     
     // Create a GeoJSON object for the route
-    const routeData = {
+    const routeData: Feature<Geometry, GeoJsonProperties> = {
       type: 'Feature',
       properties: {},
       geometry: {
         type: 'LineString',
         coordinates: points
       }
-    } as Feature<Geometry>;
+    };
 
     // Add or update the route source
     if (!sourceAdded.current) {
@@ -222,7 +222,7 @@ const Map: React.FC<MapProps> = ({
     if (!map.current || !mapLoaded) return;
 
     // Create GeoJSON for vehicles
-    const vehicleFeatures = vehicles.map(vehicle => ({
+    const vehicleFeatures: Feature<Geometry, GeoJsonProperties>[] = vehicles.map(vehicle => ({
       type: 'Feature',
       geometry: {
         type: 'Point',
@@ -234,7 +234,7 @@ const Map: React.FC<MapProps> = ({
         occupancy: vehicle.occupancy,
         heading: vehicle.heading
       }
-    })) as Feature<Geometry, GeoJsonProperties>[];
+    }));
 
     // Add vehicles source
     map.current.addSource('vehicles', {
@@ -273,7 +273,7 @@ const Map: React.FC<MapProps> = ({
     if (!map.current || !mapLoaded) return;
 
     // Create GeoJSON for stations
-    const stationFeatures = stations.map(station => ({
+    const stationFeatures: Feature<Geometry, GeoJsonProperties>[] = stations.map(station => ({
       type: 'Feature',
       geometry: {
         type: 'Point',
@@ -283,7 +283,7 @@ const Map: React.FC<MapProps> = ({
         id: station.id,
         name: station.name
       }
-    })) as Feature<Geometry, GeoJsonProperties>[];
+    }));
 
     // Add stations source
     map.current.addSource('stations', {
@@ -317,7 +317,7 @@ const Map: React.FC<MapProps> = ({
   };
 
   return (
-    <div className="relative w-full h-screen">
+    <div className="relative w-full h-full">
       <div ref={mapContainer} className="absolute inset-0" />
     </div>
   );
