@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import type { Feature, Geometry, GeoJsonProperties, FeatureCollection } from 'geojson';
 
 // Define proper TypeScript interfaces
 interface MapProps {
@@ -87,22 +88,8 @@ const Map: React.FC<MapProps> = ({
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
     // Listen for style.load event to ensure map is ready
-    map.current.on('load', () => {
+    map.current.on('style.load', () => {
       setMapLoaded(true);
-      
-      // Now we can safely add sources and layers
-      if (map.current) {
-        // Add sources and layers for route and points
-        if (routePoints && routePoints.length > 0) {
-          addRouteToMap(routePoints);
-        }
-
-        // Add vehicles to map
-        addVehiclesToMap();
-
-        // Add stations to map
-        addStationsToMap();
-      }
     });
 
     return () => {
@@ -118,19 +105,33 @@ const Map: React.FC<MapProps> = ({
     };
   }, []);
 
-  // Effect to update the map when route points change
+  // Effect to handle all map operations once the map and style are loaded
   useEffect(() => {
     if (!mapLoaded || !map.current) return;
-
+    
+    // Now we can safely add sources and layers
     if (routePoints && routePoints.length > 0) {
       addRouteToMap(routePoints);
     }
-  }, [routePoints, mapLoaded]);
+
+    // Add vehicles to map
+    addVehiclesToMap();
+
+    // Add stations to map
+    addStationsToMap();
+
+    // Add markers
+    updateMapMarkers();
+  }, [mapLoaded, routePoints]);
 
   // Effect to update markers when start/end locations change
   useEffect(() => {
     if (!mapLoaded || !map.current) return;
+    updateMapMarkers();
+  }, [startLocation, endLocation, mapLoaded]);
 
+  // Function to update map markers
+  const updateMapMarkers = () => {
     // Clear existing markers
     markers.current.forEach(marker => marker.remove());
     markers.current = [];
@@ -139,7 +140,7 @@ const Map: React.FC<MapProps> = ({
     if (startLocation) {
       const startMarker = new mapboxgl.Marker({ color: '#00ff00' })
         .setLngLat(startLocation)
-        .addTo(map.current);
+        .addTo(map.current!);
       markers.current.push(startMarker);
     }
 
@@ -147,19 +148,19 @@ const Map: React.FC<MapProps> = ({
     if (endLocation) {
       const endMarker = new mapboxgl.Marker({ color: '#ff0000' })
         .setLngLat(endLocation)
-        .addTo(map.current);
+        .addTo(map.current!);
       markers.current.push(endMarker);
     }
 
     // Fit bounds if both markers exist
-    if (startLocation && endLocation) {
+    if (startLocation && endLocation && map.current) {
       const bounds = new mapboxgl.LngLatBounds()
         .extend(startLocation)
         .extend(endLocation);
       
       map.current.fitBounds(bounds, { padding: 100 });
     }
-  }, [startLocation, endLocation, mapLoaded]);
+  };
 
   // Function to add route to map
   const addRouteToMap = (points: [number, number][]) => {
@@ -173,13 +174,13 @@ const Map: React.FC<MapProps> = ({
         type: 'LineString',
         coordinates: points
       }
-    };
+    } as Feature<Geometry>;
 
     // Add or update the route source
     if (!sourceAdded.current) {
       map.current.addSource('route', {
         type: 'geojson',
-        data: routeData as GeoJSON.Feature<GeoJSON.Geometry>
+        data: routeData
       });
       
       // Add route layer
@@ -202,8 +203,8 @@ const Map: React.FC<MapProps> = ({
     } else {
       // Update existing source
       const source = map.current.getSource('route') as mapboxgl.GeoJSONSource;
-      if (source) {
-        source.setData(routeData as GeoJSON.Feature<GeoJSON.Geometry>);
+      if (source && source.setData) {
+        source.setData(routeData);
       }
     }
   };
@@ -225,7 +226,7 @@ const Map: React.FC<MapProps> = ({
         occupancy: vehicle.occupancy,
         heading: vehicle.heading
       }
-    }));
+    })) as Feature<Geometry, GeoJsonProperties>[];
 
     // Add vehicles source
     map.current.addSource('vehicles', {
@@ -233,7 +234,7 @@ const Map: React.FC<MapProps> = ({
       data: {
         type: 'FeatureCollection',
         features: vehicleFeatures
-      } as GeoJSON.FeatureCollection
+      } as FeatureCollection
     });
 
     // Add vehicle layer
@@ -274,7 +275,7 @@ const Map: React.FC<MapProps> = ({
         id: station.id,
         name: station.name
       }
-    }));
+    })) as Feature<Geometry, GeoJsonProperties>[];
 
     // Add stations source
     map.current.addSource('stations', {
@@ -282,7 +283,7 @@ const Map: React.FC<MapProps> = ({
       data: {
         type: 'FeatureCollection',
         features: stationFeatures
-      } as GeoJSON.FeatureCollection
+      } as FeatureCollection
     });
 
     // Add station layer
