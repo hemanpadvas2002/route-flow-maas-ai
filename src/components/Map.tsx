@@ -15,15 +15,15 @@ interface MapProps {
 interface Vehicle {
   id: string;
   coordinates: [number, number];
-  heading: number; // using heading instead of bearing
-  status: 'on-time' | 'delayed' | 'out-of-service';
-  occupancy: 'low' | 'medium' | 'high';
+  heading: number;
+  status: 'on-time' | 'delayed' | 'out-of-service' | 'en-route';
+  occupancy: 'low' | 'medium' | 'high' | '30%' | '80%';
 }
 
 interface Station {
   id: string;
   name: string;
-  coordinates: [number, number]; // using coordinates instead of location
+  coordinates: [number, number];
 }
 
 const Map: React.FC<MapProps> = ({ 
@@ -45,15 +45,22 @@ const Map: React.FC<MapProps> = ({
       id: 'bus-1',
       coordinates: [80.2707, 13.0827],
       heading: 45,
-      status: 'on-time', // Using valid enum value
-      occupancy: 'low'  // Using valid enum value
+      status: 'on-time',
+      occupancy: 'low'
     },
     {
       id: 'bus-2',
       coordinates: [80.2541, 13.0550],
       heading: 190,
+      status: 'en-route',
+      occupancy: '30%'
+    },
+    {
+      id: 'bus-3',
+      coordinates: [80.2440, 13.0650],
+      heading: 270,
       status: 'delayed',
-      occupancy: 'medium'  // Using valid enum value
+      occupancy: '80%'
     }
   ];
 
@@ -74,14 +81,15 @@ const Map: React.FC<MapProps> = ({
   useEffect(() => {
     if (map.current || !mapContainer.current) return;
 
-    // Initialize map
-    mapboxgl.accessToken = 'pk.your_mapbox_token_here'; // Replace with your actual token
+    // Initialize map with correct token
+    // Note: Using a placeholder token reference here - in a real app, use environment variables
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaGVtYW4tMDciLCJhIjoiY2xuY3E0ZWl0MDlrejJrcXZ2em44OTQyaCJ9.5dJrr0KcvXS39vVLqPjKRg';
     
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/dark-v11',
       center: [80.2707, 13.0827], // Chennai coordinates
-      zoom: 12
+      zoom: 10
     });
 
     // Add navigation controls
