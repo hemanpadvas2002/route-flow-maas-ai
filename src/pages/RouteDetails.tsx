@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Clock, Users, LocateFixed, CreditCard, Bus, Train, LucideIcon } from "lucide-react";
 import Map from '@/components/Map';
 
-// Sample route data
+// Sample route data with Chennai locations
 const routeData = {
   "route-1": {
     id: "route-1",
@@ -21,55 +21,76 @@ const routeData = {
       [80.2445, 13.0539],
       [80.2338, 13.0416]
     ] as [number, number][],
-    duration: "15 mins",
+    duration: "35 mins",
     distance: "7.2 km",
     fare: "₹25",
     nextBus: "5 mins",
     occupancy: "Medium",
     transitMode: "bus" as const,
-    color: "#32CD32" // Green
+    color: "#FFA500" // Bus color
   },
   "route-2": {
     id: "route-2",
-    name: "Chennai Central to Marina Beach",
+    name: "Chennai Central to Vadapalani",
     startLocation: [80.2707, 13.0827] as [number, number], // Chennai Central
-    endLocation: [80.2838, 13.0500] as [number, number], // Marina Beach
+    endLocation: [80.2159, 13.0476] as [number, number], // Vadapalani
     routePoints: [
       [80.2707, 13.0827],
-      [80.2757, 13.0780],
-      [80.2790, 13.0700],
-      [80.2823, 13.0627],
-      [80.2838, 13.0500]
+      [80.2600, 13.0700],
+      [80.2500, 13.0600],
+      [80.2400, 13.0550],
+      [80.2300, 13.0500],
+      [80.2159, 13.0476]
     ] as [number, number][],
     duration: "20 mins",
-    distance: "4.5 km",
+    distance: "6.5 km",
     fare: "₹15",
     nextBus: "7 mins",
     occupancy: "Low",
     transitMode: "metro" as const,
-    color: "#1976D2" // Blue
+    color: "#1E88E5" // Metro color
   },
   "route-3": {
     id: "route-3",
-    name: "Marina Beach to T. Nagar",
-    startLocation: [80.2838, 13.0500] as [number, number], // Marina Beach
-    endLocation: [80.2338, 13.0416] as [number, number], // T. Nagar
+    name: "Anna Nagar to Adyar",
+    startLocation: [80.2320, 13.0878] as [number, number], // Anna Nagar
+    endLocation: [80.2574, 13.0012] as [number, number], // Adyar
     routePoints: [
-      [80.2838, 13.0500],
-      [80.2760, 13.0460],
-      [80.2680, 13.0420],
-      [80.2600, 13.0410],
-      [80.2520, 13.0400],
-      [80.2440, 13.0405],
-      [80.2338, 13.0416]
+      [80.2320, 13.0878],
+      [80.2350, 13.0700],
+      [80.2400, 13.0500],
+      [80.2450, 13.0300],
+      [80.2500, 13.0150],
+      [80.2574, 13.0012]
     ] as [number, number][],
-    duration: "35 mins",
-    distance: "8.3 km",
+    duration: "45 mins",
+    distance: "10.5 km",
     fare: "₹30",
     nextBus: "12 mins",
     occupancy: "High",
     transitMode: "bus" as const,
-    color: "#FF8C00" // Orange
+    color: "#FFA500" // Bus color
+  },
+  "route-4": {
+    id: "route-4",
+    name: "Koyambedu to Chennai Airport",
+    startLocation: [80.2029, 13.0667] as [number, number], // Koyambedu
+    endLocation: [80.1620, 12.9900] as [number, number], // Chennai Airport
+    routePoints: [
+      [80.2029, 13.0667],
+      [80.1950, 13.0500],
+      [80.1850, 13.0300],
+      [80.1750, 13.0100],
+      [80.1680, 13.0000],
+      [80.1620, 12.9900]
+    ] as [number, number][],
+    duration: "25 mins",
+    distance: "9.0 km",
+    fare: "₹20",
+    nextBus: "3 mins",
+    occupancy: "Medium",
+    transitMode: "metro" as const,
+    color: "#1E88E5" // Metro color
   }
 };
 
@@ -102,7 +123,7 @@ const RouteDetails: React.FC = () => {
 
   useEffect(() => {
     if (!route) {
-      navigate('/');
+      navigate('/route-options');
     } else {
       // Ensure map is visible after component mounts
       setTimeout(() => setMapVisible(true), 100);
@@ -125,6 +146,7 @@ const RouteDetails: React.FC = () => {
             startLocation={route.startLocation}
             endLocation={route.endLocation}
             routePoints={route.routePoints}
+            attributionControl={false}
           />
         )}
       </div>

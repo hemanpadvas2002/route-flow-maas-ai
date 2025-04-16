@@ -9,6 +9,7 @@ interface MapProps {
   startLocation?: [number, number];
   endLocation?: [number, number];
   routePoints?: [number, number][];
+  attributionControl?: boolean;
 }
 
 // Define the correct types for our vehicles and stations
@@ -29,7 +30,8 @@ interface Station {
 const Map: React.FC<MapProps> = ({ 
   startLocation, 
   endLocation, 
-  routePoints = [] 
+  routePoints = [],
+  attributionControl = true
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -75,6 +77,16 @@ const Map: React.FC<MapProps> = ({
       id: 'station-2',
       name: 'T. Nagar',
       coordinates: [80.2338, 13.0416]
+    },
+    {
+      id: 'station-3',
+      name: 'Marina Beach',
+      coordinates: [80.2838, 13.0500]
+    },
+    {
+      id: 'station-4',
+      name: 'Anna Nagar',
+      coordinates: [80.2320, 13.0878]
     }
   ];
 
@@ -102,7 +114,7 @@ const Map: React.FC<MapProps> = ({
       style: 'mapbox://styles/mapbox/dark-v11',
       center: [80.2707, 13.0827], // Chennai coordinates
       zoom: 12,
-      attributionControl: false
+      attributionControl: attributionControl
     });
 
     // Add navigation controls
@@ -140,7 +152,7 @@ const Map: React.FC<MapProps> = ({
     });
 
     return cleanupMap;
-  }, []);
+  }, [attributionControl]);
 
   // Effect to handle all map operations once the map and style are loaded
   useEffect(() => {
