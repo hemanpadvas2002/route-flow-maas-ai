@@ -100,11 +100,11 @@ const RouteOptions = () => {
   return (
     <div className="min-h-screen flex flex-col urban-dusk-gradient">
       {/* Map background */}
-      <div className="w-full h-[65vh]">
+      <div className="w-full h-[60vh] md:h-[65vh] lg:h-[70vh]">
         <Map 
-          startLocation={[80.2707, 13.0827]} // Chennai Central
-          endLocation={[80.2338, 13.0416]}   // T. Nagar
-          attributionControl={false} // Remove Mapbox watermark
+          startLocation={[80.2707, 13.0827]}
+          endLocation={[80.2338, 13.0416]}
+          attributionControl={false}
         />
       </div>
       
@@ -148,11 +148,11 @@ const RouteOptions = () => {
       </div>
       
       {/* Route options panel */}
-      <div className="absolute bottom-0 left-0 right-0 p-0 rounded-t-2xl overflow-hidden">
+      <div className="absolute bottom-0 left-0 right-0 p-0 rounded-t-2xl overflow-hidden max-w-2xl mx-auto">
         <div className="bg-gradient-to-b from-white/5 to-white/0 dark:from-black/5 dark:to-black/0 backdrop-blur-xl rounded-t-2xl">
           <div className="h-1.5 w-12 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto my-2"></div>
           
-          <div className="overflow-auto max-h-[40vh] pb-4">
+          <div className="overflow-auto max-h-[40vh] md:max-h-[35vh] pb-4">
             {routeOptions.map((route) => (
               <div
                 key={route.id}
