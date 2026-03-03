@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Clock, Users, LocateFixed, CreditCard, Bus, Train } from "lucide-react";
 import Map from '@/components/Map';
+import LastMileConnectivity from '@/components/LastMile/LastMileConnectivity';
+import { LastMileServiceType } from '@/components/LastMile/types';
 import { toast } from "sonner";
 
 // Sample route data with Chennai locations
@@ -127,6 +129,11 @@ const RouteDetails: React.FC = () => {
     navigate('/payment/nfc');
   };
 
+  const handleLastMileBook = (service: LastMileServiceType, fare: number, eta: number) => {
+    toast.success(`${service} booked! ₹${fare} • ETA ${eta} min`);
+    navigate('/payment/nfc');
+  };
+
   const getTransitIcon = () => {
     return route.transitMode === "bus" ? Bus : Train;
   };
@@ -151,7 +158,7 @@ const RouteDetails: React.FC = () => {
       <div className={`
         fixed bottom-0 left-0 right-0 bg-card text-card-foreground rounded-t-2xl shadow-lg
         transition-transform duration-300 ease-in-out transform z-10
-        max-w-2xl mx-auto
+        max-w-2xl mx-auto max-h-[75vh] overflow-y-auto
         ${collapsed ? 'translate-y-[calc(100%-3.5rem)]' : ''}
       `}>
         {/* Handle for collapsing/expanding */}
@@ -227,6 +234,15 @@ const RouteDetails: React.FC = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Last Mile Connectivity */}
+          <LastMileConnectivity
+            transitStopName={route.name.split(' to ')[1] || 'Transit Stop'}
+            transitStopCoords={route.endLocation}
+            destinationName="Your Destination"
+            lastMileDistanceKm={2.5}
+            onBook={handleLastMileBook}
+          />
         </CardContent>
       </div>
     </div>
