@@ -47,11 +47,11 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col urban-dusk-gradient">
       {/* Map background */}
-      <div className="w-full h-screen">
+      <div className="w-full h-screen absolute inset-0">
         <Map 
-          startLocation={[80.2707, 13.0827]} // Chennai Central
-          endLocation={destination ? [80.2338, 13.0416] : undefined}   // T. Nagar
-          attributionControl={false} // Remove Mapbox watermark
+          startLocation={[80.2707, 13.0827]}
+          endLocation={destination ? [80.2338, 13.0416] : undefined}
+          attributionControl={false}
         />
       </div>
       

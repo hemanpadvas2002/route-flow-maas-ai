@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Clock, Users, LocateFixed, CreditCard, Bus, Train } from "lucide-react";
 import Map from '@/components/Map';
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 // Sample route data with Chennai locations
 const routeData = {
@@ -134,9 +134,9 @@ const RouteDetails: React.FC = () => {
   const TransitIcon = getTransitIcon();
 
   return (
-    <div className="min-h-screen flex flex-col urban-dusk-gradient">
-      {/* Map takes the full height */}
-      <div className="w-full flex-grow">
+    <div className="min-h-screen h-screen flex flex-col urban-dusk-gradient relative">
+      {/* Map takes the full screen */}
+      <div className="absolute inset-0 w-full h-full">
         {mapVisible && (
           <Map
             startLocation={route.startLocation}
@@ -151,6 +151,7 @@ const RouteDetails: React.FC = () => {
       <div className={`
         fixed bottom-0 left-0 right-0 bg-card text-card-foreground rounded-t-2xl shadow-lg
         transition-transform duration-300 ease-in-out transform z-10
+        max-w-2xl mx-auto
         ${collapsed ? 'translate-y-[calc(100%-3.5rem)]' : ''}
       `}>
         {/* Handle for collapsing/expanding */}
@@ -176,7 +177,7 @@ const RouteDetails: React.FC = () => {
 
         {/* Content */}
         <CardContent className="grid gap-4 p-4 pt-0">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4">
             <Card>
               <CardContent className="p-2 text-center">
                 <Clock className="h-5 w-5 mx-auto mb-1 text-blue-500" />

@@ -382,8 +382,8 @@ const Map: React.FC<MapProps> = ({
   };
 
   return (
-    <div className="relative w-full h-full">
-      <div ref={mapContainer} className="absolute inset-0" />
+    <div className="relative w-full h-full min-h-[300px]">
+      <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
     </div>
   );
 };
