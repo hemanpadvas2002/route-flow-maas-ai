@@ -10,7 +10,7 @@ A real-time interface showcasing live data visualisation, route optimisation, an
 
 > Designed for clarity, speed, and real-time decision-making.
 
-![Operational Dashboard](./assets/dashboard.png)
+![Operational Dashboard]()
 
 ---
 
