@@ -1,6 +1,6 @@
 # Argo — MaaS Platform
 
-Argo is a Mobility-as-a-Service (MaaS) platform designed to simplify transportation by integrating different mobility options into a single system.
+Argo is a Mobility-as-a-Service (MaaS) platform concept, with a supporting product presentation explaining the system design and flow.
 
 ---
 
