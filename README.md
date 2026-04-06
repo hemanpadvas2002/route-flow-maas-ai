@@ -31,6 +31,11 @@ The goal of Argo is to create a unified platform where users can plan, access, a
 Prototype / early-stage development
 
 ---
+## 📄 Presentation
+
+[View Argo Presentation](Argo_MaaS_Presentation.pdf)
+
+---
 
 ## 🎯 Vision
 
